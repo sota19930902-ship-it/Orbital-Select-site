@@ -202,6 +202,27 @@ export const PRODUCTS: Product[] = (() => {
 
       const cleanId = (sp.product_id || `sp-${idx}`).replace(/[^a-zA-Z0-9_-]/g, '_');
 
+      // スプレッドシート追加列のマッピング
+      const colorsStr = sp.colors ? String(sp.colors).trim() : '';
+      const sizeStr = sp.size ? String(sp.size).trim() : '';
+      const materialsStr = sp.materials ? String(sp.materials).trim() : '';
+
+      const parsedMaterials = materialsStr
+        ? materialsStr
+            .split(/[,/、・;]/)
+            .map((m) => m.trim())
+            .filter(Boolean)
+        : [];
+      const materialsList = parsedMaterials.length > 0 ? parsedMaterials : ['高品質素材'];
+
+      const tags = [brandName, category];
+      if (colorsStr && colorsStr !== '不明' && colorsStr !== '未記載' && colorsStr !== '記載なし' && colorsStr !== '-') {
+        tags.push(colorsStr);
+      }
+      parsedMaterials.forEach((m) => {
+        if (!tags.includes(m)) tags.push(m);
+      });
+
       return {
         id: `gas-${cleanId}`,
         rank: idx + 1,
@@ -218,11 +239,14 @@ export const PRODUCTS: Product[] = (() => {
         reviewCount: 32 + idx * 3,
         images,
         description: sp.description || `${brandName}のモダンインテリア家具`,
-        materials: ['高品質素材'],
-        dimensions: '–',
-        color: '–',
-        sizeCategory: '標準',
-        tags: [brandName, category],
+        materials: materialsList,
+        materialText: materialsStr || undefined,
+        dimensions: sizeStr || '–',
+        color: colorsStr || '–',
+        colors: colorsStr || undefined,
+        size: sizeStr || undefined,
+        sizeCategory: sizeStr || '標準',
+        tags,
         editorialComment: `${brandName}のアイコニックなデザインと確かな品質を誇る注目コレクション。`,
         pros: ['正規パートナー取扱品', '上質なデザイン・品質保証'],
         cons: ['最新在庫状況は公式サイトをご確認ください'],

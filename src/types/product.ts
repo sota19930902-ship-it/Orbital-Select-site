@@ -9,6 +9,9 @@ export interface SpreadsheetProduct {
   product_name: string;
   category_id: string;
   price: number;
+  colors?: string;
+  size?: string;
+  materials?: string;
   image_url: string;
   images?: string[] | string;
   image_urls?: string[] | string;

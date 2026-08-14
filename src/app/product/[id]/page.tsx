@@ -307,18 +307,31 @@ export default function ProductDetailPage({ params }: PageProps) {
               </div>
 
               {/* Quick Specs Overview */}
+              {/* Quick Specs Overview */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px', fontSize: '0.85rem' }}>
-                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '10px 14px', borderRadius: 'var(--radius-xs)' }}>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem' }}>サイズ (Size)</span>
-                  <strong style={{ color: 'var(--text-main)' }}>{product.dimensions}</strong>
+                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)' }}>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>サイズ (Size)</span>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
+                    {product.size && product.size !== '-' && product.size !== '–'
+                      ? product.size
+                      : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                  </strong>
                 </div>
-                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '10px 14px', borderRadius: 'var(--radius-xs)' }}>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem' }}>カラー (Color)</span>
-                  <strong style={{ color: 'var(--text-main)' }}>{product.color}</strong>
+                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)' }}>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>カラー (Color)</span>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
+                    {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
+                      ? product.colors
+                      : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                  </strong>
                 </div>
-                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '10px 14px', borderRadius: 'var(--radius-xs)', gridColumn: 'span 2' }}>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem' }}>主要素材 (Material)</span>
-                  <strong style={{ color: 'var(--text-main)' }}>{product.materials.join(' / ')}</strong>
+                <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)', gridColumn: 'span 2' }}>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>材質・素材 (Materials)</span>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
+                    {product.materialText && product.materialText !== '-' && product.materialText !== '–'
+                      ? product.materialText
+                      : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join(' / ') : '–')}
+                  </strong>
                 </div>
               </div>
 
@@ -376,15 +389,27 @@ export default function ProductDetailPage({ params }: PageProps) {
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>寸法 (サイズ)</th>
-                    <td style={{ padding: '12px' }}>{product.dimensions}</td>
+                    <td style={{ padding: '12px' }}>
+                      {product.size && product.size !== '-' && product.size !== '–'
+                        ? product.size
+                        : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                    </td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>素材</th>
-                    <td style={{ padding: '12px' }}>{product.materials.join('、')}</td>
+                    <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>素材・材質</th>
+                    <td style={{ padding: '12px' }}>
+                      {product.materialText && product.materialText !== '-' && product.materialText !== '–'
+                        ? product.materialText
+                        : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join('、') : '–')}
+                    </td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>カラー展開</th>
-                    <td style={{ padding: '12px' }}>{product.color}</td>
+                    <td style={{ padding: '12px' }}>
+                      {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
+                        ? product.colors
+                        : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                    </td>
                   </tr>
                   <tr>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>ターゲットユーザー</th>

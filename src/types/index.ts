@@ -71,8 +71,11 @@ export interface Product {
   images: string[];
   description: string;
   materials: string[];
+  materialText?: string;
   dimensions: string;
   color: string;
+  colors?: string;
+  size?: string;
   sizeCategory: string;
   tags: string[];
   editorialComment?: string;

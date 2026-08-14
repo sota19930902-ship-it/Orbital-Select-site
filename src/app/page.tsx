@@ -133,9 +133,12 @@ export default function Home() {
         const matchName = p.name.toLowerCase().includes(q);
         const matchSubtitle = p.subtitle.toLowerCase().includes(q);
         const matchBrand = p.brand.toLowerCase().includes(q);
+        const matchDesc = p.description.toLowerCase().includes(q);
         const matchTags = p.tags.some((t) => t.toLowerCase().includes(q));
-        const matchMat = p.materials.some((m) => m.toLowerCase().includes(q));
-        if (!matchName && !matchSubtitle && !matchBrand && !matchTags && !matchMat) {
+        const matchMat = p.materials.some((m) => m.toLowerCase().includes(q)) || (p.materialText && p.materialText.toLowerCase().includes(q));
+        const matchColor = p.color.toLowerCase().includes(q) || (p.colors && p.colors.toLowerCase().includes(q));
+        const matchSize = p.dimensions.toLowerCase().includes(q) || (p.size && p.size.toLowerCase().includes(q)) || p.sizeCategory.toLowerCase().includes(q);
+        if (!matchName && !matchSubtitle && !matchBrand && !matchDesc && !matchTags && !matchMat && !matchColor && !matchSize) {
           return false;
         }
       }
@@ -167,29 +170,34 @@ export default function Home() {
 
       // 7. Material
       if (filters.material !== 'all') {
-        const matchMat = p.materials.some((m) => {
-          if (filters.material === 'leather') return m.includes('本革') || m.includes('レザー');
-          if (filters.material === 'oak') return m.includes('オーク');
-          if (filters.material === 'mortar') return m.includes('モルタル') || m.includes('メラミン');
-          if (filters.material === 'iron') return m.includes('アイアン') || m.includes('スチール');
-          if (filters.material === 'walnut') return m.includes('ウォールナット');
-          return true;
-        });
+        const matCombined = `${p.materials.join(' ')} ${p.materialText || ''} ${p.tags.join(' ')} ${p.description}`;
+        let matchMat = false;
+        if (filters.material === 'leather') matchMat = /本革|レザー|オイルレザー|革|牛革|レザーテックス/i.test(matCombined);
+        else if (filters.material === 'oak') matchMat = /オーク|天然木|ウッド/i.test(matCombined);
+        else if (filters.material === 'mortar') matchMat = /モルタル|メラミン|モールテックス|コンクリート|アクリル|ガラス/i.test(matCombined);
+        else if (filters.material === 'iron') matchMat = /アイアン|スチール|金属|真鍮|アルミ/i.test(matCombined);
+        else if (filters.material === 'walnut') matchMat = /ウォールナット|無垢|ウォルナット/i.test(matCombined);
+        else matchMat = true;
         if (!matchMat) return false;
       }
 
       // 8. Size
       if (filters.size !== 'all') {
-        if (filters.size === 'custom' && !p.tags.includes('サイズオーダー')) return false;
-        if (filters.size === 'compact' && !p.sizeCategory.includes('一人暮らし') && !p.sizeCategory.includes('110cm') && !p.sizeCategory.includes('2人掛け')) return false;
+        const sizeCombined = `${p.size || ''} ${p.dimensions} ${p.sizeCategory} ${p.tags.join(' ')} ${p.name}`;
+        if (filters.size === 'custom' && !/サイズオーダー|カスタマイズ|変更可能/i.test(sizeCombined)) return false;
+        if (filters.size === 'compact' && !/一人暮らし|1人掛け|2人掛け|110cm|120cm|150cm|Φ160|Φ250|コンパクト|小型/i.test(sizeCombined)) return false;
+        if (filters.size === 'middle' && !/2〜3人掛け|2人掛け|3人掛け|160cm|180cm|Φ500/i.test(sizeCombined)) return false;
+        if (filters.size === 'large' && !/3人掛け|大型|ファミリー|200cm|220cm|広々/i.test(sizeCombined)) return false;
       }
 
       // 9. Color
       if (filters.color !== 'all') {
-        if (filters.color === 'camel' && !p.color.includes('キャメル') && !p.color.includes('ブラウン')) return false;
-        if (filters.color === 'gray' && !p.color.includes('グレー') && !p.color.includes('モルタル')) return false;
-        if (filters.color === 'black' && !p.color.includes('ブラック')) return false;
-        if (filters.color === 'natural' && !p.color.includes('ナチュラル')) return false;
+        const colorCombined = `${p.colors || ''} ${p.color} ${p.name} ${p.tags.join(' ')}`;
+        if (filters.color === 'camel' && !/キャメル|ブラウン|茶|ベージュ|ナチュラル/i.test(colorCombined)) return false;
+        if (filters.color === 'gray' && !/グレー|灰|モルタル/i.test(colorCombined)) return false;
+        if (filters.color === 'black' && !/ブラック|黒|ダーク/i.test(colorCombined)) return false;
+        if (filters.color === 'natural' && !/ナチュラル|オーク|木目|ホワイト/i.test(colorCombined)) return false;
+        if (filters.color === 'white' && !/ホワイト|白|オパール/i.test(colorCombined)) return false;
       }
 
       return true;

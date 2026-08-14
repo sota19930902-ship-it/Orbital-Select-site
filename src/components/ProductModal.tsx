@@ -373,21 +373,88 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             {product.description}
           </p>
 
-          {/* Specs Table */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '12px 24px',
-            backgroundColor: 'var(--bg-sub)',
-            padding: '20px',
-            borderRadius: 'var(--radius-xs)',
-            fontSize: '0.85rem',
-            marginBottom: '28px',
-          }}>
-            <div><strong style={{ color: 'var(--text-main)' }}>サイズ:</strong> {product.dimensions}</div>
-            <div><strong style={{ color: 'var(--text-main)' }}>カラー:</strong> {product.color}</div>
-            <div><strong style={{ color: 'var(--text-main)' }}>素材:</strong> {product.materials.join(' / ')}</div>
-            <div><strong style={{ color: 'var(--text-main)' }}>ブランド:</strong> {product.brand}</div>
+          {/* Specs Table & Tags */}
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '1px solid var(--border-light)',
+              borderRadius: 'var(--radius-sm)',
+              overflow: 'hidden',
+              marginBottom: '28px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: 'var(--bg-space)',
+                color: '#FFFFFF',
+                padding: '12px 18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '0.82rem',
+                fontWeight: '600',
+                letterSpacing: '0.04em',
+              }}
+            >
+              <span>スペック・仕様（Specifications）</span>
+              <span style={{ color: 'var(--accent-gold)', fontSize: '0.74rem' }}>提携正規パートナー情報</span>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1px',
+                backgroundColor: 'var(--border-light)',
+              }}
+            >
+              {/* 1. カラー / バリエーション */}
+              <div style={{ backgroundColor: '#FFFFFF', padding: '14px 18px' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: '600' }}>
+                  カラー / バリエーション
+                </span>
+                <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
+                  {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
+                    ? product.colors
+                    : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                </div>
+              </div>
+
+              {/* 2. サイズ / 寸法 */}
+              <div style={{ backgroundColor: '#FFFFFF', padding: '14px 18px' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: '600' }}>
+                  サイズ / 寸法
+                </span>
+                <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
+                  {product.size && product.size !== '-' && product.size !== '–'
+                    ? product.size
+                    : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                </div>
+              </div>
+
+              {/* 3. 材質 / 素材 */}
+              <div style={{ backgroundColor: '#FFFFFF', padding: '14px 18px' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: '600' }}>
+                  材質 / 素材
+                </span>
+                <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
+                  {product.materialText && product.materialText !== '-' && product.materialText !== '–'
+                    ? product.materialText
+                    : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join(' / ') : '–')}
+                </div>
+              </div>
+
+              {/* 4. ブランド / パートナー */}
+              <div style={{ backgroundColor: '#FFFFFF', padding: '14px 18px' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: '600' }}>
+                  ブランド / 取扱パートナー
+                </span>
+                <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
+                  {product.brand}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Merits & Demerits */}

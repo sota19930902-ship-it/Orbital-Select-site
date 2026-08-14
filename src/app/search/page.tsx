@@ -28,14 +28,16 @@ export default function SearchPage() {
     return PRODUCTS.filter((p) => {
       // Keyword
       if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
+        const q = searchQuery.toLowerCase().trim();
         const matchName = p.name.toLowerCase().includes(q);
         const matchSub = p.subtitle.toLowerCase().includes(q);
         const matchBrand = p.brand.toLowerCase().includes(q);
         const matchDesc = p.description.toLowerCase().includes(q);
         const matchTags = p.tags.some((t) => t.toLowerCase().includes(q));
-        const matchMat = p.materials.some((m) => m.toLowerCase().includes(q));
-        if (!matchName && !matchSub && !matchBrand && !matchDesc && !matchTags && !matchMat) {
+        const matchMat = p.materials.some((m) => m.toLowerCase().includes(q)) || (p.materialText && p.materialText.toLowerCase().includes(q));
+        const matchColor = p.color.toLowerCase().includes(q) || (p.colors && p.colors.toLowerCase().includes(q));
+        const matchSize = p.dimensions.toLowerCase().includes(q) || (p.size && p.size.toLowerCase().includes(q)) || p.sizeCategory.toLowerCase().includes(q);
+        if (!matchName && !matchSub && !matchBrand && !matchDesc && !matchTags && !matchMat && !matchColor && !matchSize) {
           return false;
         }
       }
