@@ -254,6 +254,18 @@ export const PRODUCTS: Product[] = (() => {
 /** ジャーナル記事（スプレッドシート未連携・空配列） */
 export const VOYAGER_JOURNAL_ARTICLES: Article[] = [
   {
+    id: 'lighting-guide',
+    title: '【2026年最新】空間の格を上げる「名作北欧・デザイナーズ照明」の選び方とおすすめ5選',
+    subtitle: 'ルイスポールセンのPH 5やパンテラ、イサム・ノグチのAKARIなど、灯すだけで部屋を上質なホテルライク空間に変える名作照明の魅力と選び方を徹底解説。',
+    category: '照明・ライティング',
+    readTime: '5分',
+    date: '2026-08-15',
+    image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1200&q=80',
+    summary: '「家具を一通り揃えたけれど、なんだか部屋が垢抜けない」「夜のリビングがどこか落ち着かない」——その原因は、部屋全体を一律に照らす「シーリングライトの光」にあるかもしれません。空間の陰影をつくり、心地よい時間と情緒を生み出す名作照明選びの3つの鉄則と、厳選した不朽の名作ライティングをご紹介します。',
+    comparedBrands: ['La Vita', 'Louis Poulsen', 'Isamu Noguchi'],
+    tags: ['照明', 'Louis Poulsen', 'Isamu Noguchi', 'La Vita', '北欧照明', 'ホテルライク', 'インテリアガイド'],
+  },
+  {
     id: 'sofa-guide',
     title: '【2026年最新】一生モノに出会う「デザインソファの選び方」と厳選モデル5選',
     subtitle: '後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。',
