@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../types';
 import { PRODUCTS, ARTICLES } from '../data/mockData';
 import { getAffiliateUrl } from '../config/affiliate';
-import { X, Star, Heart, ExternalLink, Check, AlertCircle } from 'lucide-react';
-
+import { X, Star, Heart, ExternalLink, Check, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProductModalProps {
   product: Product | null;
@@ -22,7 +21,39 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const [selectedImgIdx, setSelectedImgIdx] = useState<number>(0);
 
+  // Reset selected image index when product changes
+  useEffect(() => {
+    setSelectedImgIdx(0);
+  }, [product?.id]);
+
+  // Keyboard navigation for image gallery
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!product || !product.images || product.images.length <= 1) return;
+      if (e.key === 'ArrowLeft') {
+        setSelectedImgIdx((prev) => (prev > 0 ? prev - 1 : product.images.length - 1));
+      } else if (e.key === 'ArrowRight') {
+        setSelectedImgIdx((prev) => (prev < product.images.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [product]);
+
   if (!product) return null;
+
+  const images = product.images && product.images.length > 0 ? product.images : [];
+  const currentImage = images[selectedImgIdx] || images[0] || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedImgIdx((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedImgIdx((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  };
 
   const similarProducts = PRODUCTS.filter(
     (p) => p.id !== product.id && (p.category === product.category || p.priceRangeId === product.priceRangeId)
@@ -61,6 +92,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
+          aria-label="モーダルを閉じる"
           style={{
             position: 'absolute',
             top: '20px',
@@ -74,7 +106,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
+            border: '1px solid var(--border-light)',
             zIndex: 10,
+            transition: 'all 0.2s ease',
           }}
         >
           <X size={20} />
@@ -87,50 +121,184 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           gap: '36px',
           marginBottom: '40px',
         }}>
-          {/* Upper Left: Images (Contain mode so full furniture is displayed without clipping) */}
+          {/* Upper Left: Images Gallery */}
           <div>
             <div style={{
+              position: 'relative',
               borderRadius: 'var(--radius-sm)',
               overflow: 'hidden',
               aspectRatio: '4/3',
               marginBottom: '12px',
               backgroundColor: 'var(--bg-sub)',
+              border: '1px solid var(--border-light)',
               padding: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              userSelect: 'none',
             }}>
               <img
-                src={product.images && product.images.length > 0 ? (product.images[selectedImgIdx] || product.images[0]) : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>'}
-                alt={product.name}
+                src={currentImage}
+                alt={`${product.name} - 画像 ${selectedImgIdx + 1}`}
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
                   objectPosition: 'center',
+                  transition: 'opacity 0.2s ease',
                 }}
               />
-            </div>
 
-            {product.images.length > 1 && (
-              <div style={{ display: 'flex', gap: '8px' }}>
-                {product.images.map((img, idx) => (
+              {/* Navigation Arrows for Multiple Images */}
+              {images.length > 1 && (
+                <>
                   <button
-                    key={idx}
-                    onClick={() => setSelectedImgIdx(idx)}
+                    onClick={handlePrevImage}
+                    aria-label="前の画像"
                     style={{
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: 'var(--radius-xs)',
-                      overflow: 'hidden',
-                      border: idx === selectedImgIdx ? '2px solid var(--accent-gold)' : '1px solid var(--border-light)',
-                      padding: '4px',
-                      backgroundColor: 'var(--bg-sub)',
+                      position: 'absolute',
+                      left: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(11, 16, 32, 0.7)',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255, 255, 255, 0.18)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.9)';
+                      e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                      e.currentTarget.style.color = 'var(--accent-gold)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                      e.currentTarget.style.color = '#FFFFFF';
                     }}
                   >
-                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <ChevronLeft size={20} />
                   </button>
-                ))}
+
+                  <button
+                    onClick={handleNextImage}
+                    aria-label="次の画像"
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(11, 16, 32, 0.7)',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255, 255, 255, 0.18)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.9)';
+                      e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                      e.currentTarget.style.color = 'var(--accent-gold)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.7)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                      e.currentTarget.style.color = '#FFFFFF';
+                    }}
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+
+                  {/* Image Counter Badge */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '10px',
+                      right: '10px',
+                      padding: '4px 10px',
+                      borderRadius: 'var(--radius-full)',
+                      backgroundColor: 'rgba(11, 16, 32, 0.75)',
+                      color: '#F8FAFC',
+                      backdropFilter: 'blur(6px)',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      letterSpacing: '0.04em',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                    }}
+                  >
+                    {selectedImgIdx + 1} / {images.length}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Thumbnail Row */}
+            {images.length > 1 && (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  overflowX: 'auto',
+                  padding: '4px 2px 6px 2px',
+                  scrollbarWidth: 'thin',
+                }}
+              >
+                {images.map((img, idx) => {
+                  const isActive = idx === selectedImgIdx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedImgIdx(idx)}
+                      aria-label={`画像 ${idx + 1} を選択`}
+                      style={{
+                        width: '64px',
+                        height: '64px',
+                        flexShrink: 0,
+                        borderRadius: 'var(--radius-xs)',
+                        overflow: 'hidden',
+                        border: isActive ? '2px solid var(--accent-gold)' : '1px solid var(--border-light)',
+                        boxShadow: isActive ? '0 0 10px rgba(212, 175, 55, 0.45)' : 'none',
+                        opacity: isActive ? 1 : 0.65,
+                        transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        padding: '4px',
+                        backgroundColor: 'var(--bg-sub)',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) e.currentTarget.style.opacity = '0.9';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) e.currentTarget.style.opacity = '0.65';
+                      }}
+                    >
+                      <img
+                        src={img}
+                        alt=""
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                        }}
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

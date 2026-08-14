@@ -143,9 +143,19 @@ export const PRODUCTS: Product[] = (() => {
       else if (price <= 400000) priceRangeId = '20to40';
       else priceRangeId = 'over40';
 
-      const imageUrl = (sp.image_url && sp.image_url.startsWith('http'))
-        ? sp.image_url
-        : FALLBACK_IMAGES[category];
+      // Extract multiple images if comma-separated, or use fallback
+      let parsedImages: string[] = [];
+      if (Array.isArray(sp.images) && sp.images.length > 0) {
+        parsedImages = sp.images.filter((u) => typeof u === 'string' && u.trim().startsWith('http')).map((u) => u.trim());
+      } else if (sp.image_url && typeof sp.image_url === 'string') {
+        parsedImages = sp.image_url
+          .split(',')
+          .map((u) => u.trim())
+          .filter((u) => u.startsWith('http'));
+      }
+
+      const images = parsedImages.length > 0 ? parsedImages : [FALLBACK_IMAGES[category]];
+      const imageUrl = images[0];
 
       const affiliateUrl = (sp.affiliate_url && sp.affiliate_url.startsWith('http'))
         ? sp.affiliate_url
@@ -167,7 +177,7 @@ export const PRODUCTS: Product[] = (() => {
         priceRangeId,
         rating: 4.85,
         reviewCount: 32 + idx * 3,
-        images: [imageUrl],
+        images,
         description: sp.description || `${brandName}のモダンインテリア家具`,
         materials: ['高品質素材'],
         dimensions: '–',

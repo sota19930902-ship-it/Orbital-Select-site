@@ -2,12 +2,13 @@
 
 import React, { useState, use } from 'react';
 import Link from 'next/link';
+import { Product } from '../../../types';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import { ProductCard } from '../../../components/ProductCard';
 import { PRODUCTS, VOYAGER_JOURNAL_ARTICLES, PARTNER_BRANDS_INFO } from '../../../data/mockData';
 import { getAffiliateUrl } from '../../../config/affiliate';
-import { Star, ExternalLink, ShieldCheck, CheckCircle2, ArrowRight, Layers, Heart, Scale } from 'lucide-react';
+import { Star, ExternalLink, ShieldCheck, CheckCircle2, ArrowRight, Layers, Heart, Scale, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,8 +29,10 @@ export default function ProductDetailPage({ params }: PageProps) {
         <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', textAlign: 'center' }}>
           <div>
             <h1 style={{ marginBottom: '8px' }}>商品が見つかりません</h1>
-            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>この商品は存在しないか、スプレッドシートにまだ登録されていません。</p>
-            <Link href="/search" className="btn-primary">商品一覧へ戻る</Link>
+            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>指定された商品は存在しないか、取り扱いが終了しました。</p>
+            <Link href="/" className="btn-primary" style={{ display: 'inline-flex' }}>
+              トップページに戻る
+            </Link>
           </div>
         </main>
         <Footer />
@@ -37,7 +40,23 @@ export default function ProductDetailPage({ params }: PageProps) {
     );
   }
 
-  const brandInfo = PARTNER_BRANDS_INFO.find((b) => b.id === product.partnerBrandId);
+  const images = product.images && product.images.length > 0 ? product.images : [];
+  const currentImage = images[activeImageIdx] || images[0] || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
+
+  const handlePrevImage = () => {
+    setActiveImageIdx((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
+  const handleNextImage = () => {
+    setActiveImageIdx((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  };
+
+  const isInWishlist = (id: string) => wishlist.some((item) => item.id === id);
+
+  const handleToggleWishlist = (p: Product) => {
+    setWishlist((prev) => (prev.some((item) => item.id === p.id) ? prev.filter((item) => item.id !== p.id) : [...prev, p]));
+  };
+
   const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
 
   // Similar Products
@@ -45,18 +64,10 @@ export default function ProductDetailPage({ params }: PageProps) {
     (p) => p.id !== product.id && (p.category === product.category || p.partnerBrandId === product.partnerBrandId)
   ).slice(0, 4);
 
-
-
   // Related Articles
   const relatedArticles = VOYAGER_JOURNAL_ARTICLES.filter(
     (a) => a.comparedBrands?.includes(product.brand) || a.tags.some((t) => product.tags.includes(t))
   );
-
-  const handleToggleWishlist = (p: any) => {
-    setWishlist((prev) => (prev.some((item) => item.id === p.id) ? prev.filter((item) => item.id !== p.id) : [...prev, p]));
-  };
-
-  const isInWishlist = (id: string) => wishlist.some((item) => item.id === id);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
@@ -64,26 +75,26 @@ export default function ProductDetailPage({ params }: PageProps) {
 
       <main style={{ flex: 1, padding: '40px 0 80px' }}>
         <div className="container">
-          {/* Breadcrumb Navigation */}
-          <div style={{ fontSize: '0.82rem', color: 'var(--text-sub)', marginBottom: '28px', display: 'flex', gap: '8px' }}>
-            <Link href="/" style={{ color: 'var(--text-sub)' }}>TOP</Link>
+          {/* Breadcrumbs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-sub)', marginBottom: '32px' }}>
+            <Link href="/" style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>ホーム</Link>
             <span>/</span>
-            <Link href="/categories" style={{ color: 'var(--text-sub)' }}>{product.category}</Link>
+            <Link href={`/categories/${product.category}`} style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>
+              {product.category.toUpperCase()}
+            </Link>
             <span>/</span>
-            <span style={{ color: 'var(--text-main)', fontWeight: '500' }}>{product.name}</span>
+            <span style={{ color: 'var(--text-main)' }}>{product.name}</span>
           </div>
 
-          {/* Top Main Product Grid (Gallery + Details) */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1.1fr 1fr',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
               gap: '48px',
               backgroundColor: '#FFFFFF',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-light)',
-              padding: '36px',
-              boxShadow: 'var(--shadow-subtle)',
+              padding: '40px',
+              boxShadow: 'var(--shadow-sm)',
               marginBottom: '64px',
             }}
           >
@@ -102,35 +113,149 @@ export default function ProductDetailPage({ params }: PageProps) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  userSelect: 'none',
                 }}
               >
                 <img
-                  src={product.images && product.images.length > 0 ? (product.images[activeImageIdx] || product.images[0]) : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>'}
-                  alt={product.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  src={currentImage}
+                  alt={`${product.name} - 画像 ${activeImageIdx + 1}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', transition: 'opacity 0.2s ease' }}
                 />
+
+                {/* Arrows for Multiple Images */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrevImage}
+                      aria-label="前の画像"
+                      style={{
+                        position: 'absolute',
+                        left: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(11, 16, 32, 0.7)',
+                        color: '#FFFFFF',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        backdropFilter: 'blur(4px)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.9)';
+                        e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                        e.currentTarget.style.color = 'var(--accent-gold)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.7)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                        e.currentTarget.style.color = '#FFFFFF';
+                      }}
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+
+                    <button
+                      onClick={handleNextImage}
+                      aria-label="次の画像"
+                      style={{
+                        position: 'absolute',
+                        right: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(11, 16, 32, 0.7)',
+                        color: '#FFFFFF',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        backdropFilter: 'blur(4px)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.9)';
+                        e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                        e.currentTarget.style.color = 'var(--accent-gold)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(11, 16, 32, 0.7)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                        e.currentTarget.style.color = '#FFFFFF';
+                      }}
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+
+                    {/* Image Counter Badge */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '12px',
+                        right: '12px',
+                        padding: '4px 10px',
+                        borderRadius: 'var(--radius-full)',
+                        backgroundColor: 'rgba(11, 16, 32, 0.75)',
+                        color: '#F8FAFC',
+                        backdropFilter: 'blur(6px)',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        letterSpacing: '0.04em',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                      }}
+                    >
+                      {activeImageIdx + 1} / {images.length}
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Thumbnails */}
-              {product.images.length > 1 && (
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  {product.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveImageIdx(idx)}
-                      style={{
-                        width: '72px',
-                        height: '72px',
-                        borderRadius: 'var(--radius-xs)',
-                        border: activeImageIdx === idx ? '2px solid var(--accent-gold)' : '1px solid var(--border-light)',
-                        overflow: 'hidden',
-                        backgroundColor: 'var(--bg-sub)',
-                        padding: '4px',
-                      }}
-                    >
-                      <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </button>
-                  ))}
+              {images.length > 1 && (
+                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', padding: '4px 2px 6px 2px', scrollbarWidth: 'thin' }}>
+                  {images.map((img, idx) => {
+                    const isActive = activeImageIdx === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImageIdx(idx)}
+                        aria-label={`画像 ${idx + 1} を選択`}
+                        style={{
+                          width: '68px',
+                          height: '68px',
+                          flexShrink: 0,
+                          borderRadius: 'var(--radius-xs)',
+                          border: isActive ? '2px solid var(--accent-gold)' : '1px solid var(--border-light)',
+                          boxShadow: isActive ? '0 0 10px rgba(212, 175, 55, 0.45)' : 'none',
+                          opacity: isActive ? 1 : 0.65,
+                          transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                          overflow: 'hidden',
+                          backgroundColor: 'var(--bg-sub)',
+                          padding: '4px',
+                          cursor: 'pointer',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isActive) e.currentTarget.style.opacity = '0.9';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isActive) e.currentTarget.style.opacity = '0.65';
+                        }}
+                      >
+                        <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>

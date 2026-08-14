@@ -10,6 +10,7 @@ export interface SpreadsheetProduct {
   category_id: string;
   price: number;
   image_url: string;
+  images?: string[];
   description: string;
   status: string;
   updated_at: string;
@@ -32,3 +33,6 @@ export interface SpreadsheetApiResponse {
 
 export const GAS_API_URL =
   'https://script.google.com/macros/s/AKfycby14DFim0r4eaQA-0pPK8DUKEr8MkLH3Lsyh5IoR384siqQqENEnmAX1OJMfjVFJD0n/exec';
+
+export type { Product } from './index';
+
