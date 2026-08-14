@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', whiteSpace: 'nowrap' }}>
           <span style={{ whiteSpace: 'nowrap' }}><strong>ORBITAL SELECT</strong> — Premium Affiliate Furniture Discovery Platform</span>
           <span style={{ color: 'var(--accent-gold)', fontWeight: '500', whiteSpace: 'nowrap' }}>
-            全9大提携パートナーブランド 公式カタログ連動
+            全5大提携パートナーブランド 公式カタログ連動
           </span>
 
         </div>

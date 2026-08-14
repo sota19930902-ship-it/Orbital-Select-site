@@ -20,7 +20,7 @@ export const BrandMatrixSection: React.FC<BrandMatrixSectionProps> = ({ onSelect
           <span className="section-tag">Constellations</span>
           <h2 className="section-title">ブランドガイド ＆ 比較マトリックス</h2>
           <p className="section-subtitle">
-            FLYMEe・KANADEMONO・CRASH GATE・Re:CENO・LOWYAの格付け・価格帯・テイストの違いを一目で比較。
+            FLYMEe・MASTERWAL・ACTUS・Air Rhizome・La Vitaの格付け・価格帯・テイストの違いを一目で比較。
           </p>
         </div>
 

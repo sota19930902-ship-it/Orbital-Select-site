@@ -58,10 +58,10 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { id: 'under10', label: '〜10万円', brand: 'LOWYA中心（手頃でトレンド）' },
-                { id: '10to20', label: '10〜20万円', brand: 'Re:CENO中心（北欧ナチュラル）' },
-                { id: '20to40', label: '20〜40万円', brand: 'KANADEMONO / CRASH GATE中心' },
-                { id: 'over40', label: '40万円以上', brand: 'FLYMEe中心（最高級ラグジュアリー）' },
+                { id: 'under10', label: '〜10万円', brand: 'Air Rhizome中心（手頃で高コスパ）' },
+                { id: '10to20', label: '10〜20万円', brand: 'FLYMEe / La Vita（デザイン照明・家具）' },
+                { id: '20to40', label: '20〜40万円', brand: 'ACTUS / FLYMEe（上質モダン）' },
+                { id: 'over40', label: '40万円以上', brand: 'MASTERWAL / FLYMEe（最高峰ラグジュアリー）' },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -127,10 +127,10 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { id: 'nordic', label: '北欧・ナチュラル', brand: 'Re:CENO + LOWYA' },
-                { id: 'minimal', label: 'ミニマル・モダン', brand: 'KANADEMONO + FLYMEe' },
-                { id: 'hotel', label: 'ホテルライク', brand: 'KANADEMONO + FLYMEe' },
-                { id: 'vintage', label: 'ヴィンテージ・インダストリアル', brand: 'CRASH GATE + KANADEMONO' },
+                { id: 'nordic', label: '北欧・ナチュラル', brand: 'ACTUS + Air Rhizome' },
+                { id: 'minimal', label: 'ミニマル・モダン', brand: 'MASTERWAL + FLYMEe' },
+                { id: 'hotel', label: 'ホテルライク', brand: 'FLYMEe + La Vita' },
+                { id: 'vintage', label: 'ヴィンテージ・インダストリアル', brand: 'FLYMEe + MASTERWAL' },
               ].map((item) => (
                 <button
                   key={item.id}

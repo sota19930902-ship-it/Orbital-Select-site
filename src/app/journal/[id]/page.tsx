@@ -111,7 +111,7 @@ export default function JournalArticleDetailPage({ params }: PageProps) {
                 2. ブランド選びの判断基準
               </h2>
               <p style={{ fontSize: '0.94rem', lineHeight: '1.9', color: 'var(--text-sub)', marginBottom: '36px' }}>
-                予算やライフスタイルに応じた選択肢を見極めることが成功のキーとなります。一生モノの主役家具にはMASTERWALやLa Vitaの名作を選び、デスク環境にはKANADEMONO、ファミリーダイニングにはACTUSを組み合わせるなどのクロスブランドコーディネートがおすすめです。
+                予算やライフスタイルに応じた選択肢を見極めることが成功のキーとなります。一生モノの主役家具にはMASTERWALやFLYMEe、名作照明にはLa Vitaを選び、ファミリーダイニングにはACTUS、高コスパなアイテムにはAir Rhizomeを組み合わせるなどのクロスブランドコーディネートがおすすめです。
               </p>
 
               {/* Mentioned Brands Box */}

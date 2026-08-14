@@ -23,10 +23,10 @@ export const PriceTierSection: React.FC<PriceTierSectionProps> = ({
   const ITEMS_PER_PAGE = 40;
 
   const tiers = [
-    { id: 'under10', label: '10万円以下', brandFocus: 'LOWYA中心（手頃でトレンド）', filterFn: (p: Product) => p.price <= 100000 },
-    { id: '10to20', label: '10〜20万円', brandFocus: 'Re:CENO中心（北欧ナチュラル）', filterFn: (p: Product) => p.price > 100000 && p.price <= 200000 },
-    { id: '20to40', label: '20〜40万円', brandFocus: 'KANADEMONO・CRASH GATE中心', filterFn: (p: Product) => p.price > 200000 && p.price <= 400000 },
-    { id: 'over40', label: '40万円以上', brandFocus: 'FLYMEe中心（最高級ラグジュアリー）', filterFn: (p: Product) => p.price > 400000 },
+    { id: 'under10', label: '10万円以下', brandFocus: 'Air Rhizome中心（手頃で高コスパ）', filterFn: (p: Product) => p.price <= 100000 },
+    { id: '10to20', label: '10〜20万円', brandFocus: 'FLYMEe / La Vita中心（デザイン照明・家具）', filterFn: (p: Product) => p.price > 100000 && p.price <= 200000 },
+    { id: '20to40', label: '20〜40万円', brandFocus: 'ACTUS / FLYMEe中心（上質モダン）', filterFn: (p: Product) => p.price > 200000 && p.price <= 400000 },
+    { id: 'over40', label: '40万円以上', brandFocus: 'MASTERWAL / FLYMEe中心（最高峰ラグジュアリー）', filterFn: (p: Product) => p.price > 400000 },
   ];
 
   const currentTierObj = tiers.find((t) => t.id === activeTier) || tiers[0];

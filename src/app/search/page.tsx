@@ -128,7 +128,7 @@ export default function SearchPage() {
             全提携ブランド・製品横断検索
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem', maxWidth: '640px', margin: '0 auto' }}>
-            MASTERWAL、La Vita、KANADEMONO、CRASH GATE、Re:CENO、LOWYAなど、提携パートナー家具を条件に合わせて一元比較・検索できます。
+            FLYMEe、MASTERWAL、ACTUS、Air Rhizome Interior、La Vitaなど、全5大提携パートナー家具を条件に合わせて一元比較・検索できます。
           </p>
         </div>
 

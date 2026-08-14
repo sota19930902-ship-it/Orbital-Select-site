@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SearchFilters } from '../types';
+import { PARTNER_BRANDS_INFO } from '../data/mockData';
 import { Search, SlidersHorizontal, RefreshCw } from 'lucide-react';
 
 interface SearchSectionProps {
@@ -70,7 +71,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
               <div style={{ position: 'relative' }}>
                 <input
                   type="text"
-                  placeholder="例：モールテックス, オイルレザーソファ, KANADEMONO..."
+                  placeholder="例：ウォールナット, デニッシュソファ, MASTERWAL..."
                   value={filters.query}
                   onChange={(e) => onFilterChange({ query: e.target.value })}
                   style={{
@@ -151,17 +152,11 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 }}
               >
                 <option value="all">全パートナーブランドから探す</option>
-                <option value="masterwal">MASTERWAL（最高峰ウォールナット）</option>
-                <option value="air_rhizome">Air Rhizome Interior（北欧・高コスパ）</option>
-                
-                <option value="lavita">La Vita（名作北欧照明ルイスポールセン）</option>
-                <option value="flymee">FLYMEe（ラグジュアリー）</option>
-                <option value="kanademono">KANADEMONO（ミニマル・ホテルライク）</option>
-                <option value="crashgate">CRASH GATE（ヴィンテージ）</option>
-                <option value="receno">Re:CENO（北欧ナチュラル）</option>
-                <option value="lowya">LOWYA（トレンド・エントリー）</option>
-                <option value="actus">ACTUS（北欧モダン・上質ライフスタイル）</option>
-
+                {PARTNER_BRANDS_INFO.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}（{b.taste || b.role}）
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -185,10 +180,10 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 }}
               >
                 <option value="all">すべての価格帯</option>
-                <option value="under10">〜10万円（LOWYA中心）</option>
-                <option value="10to20">10〜20万円（Re:CENO中心）</option>
-                <option value="20to40">20〜40万円（KANADEMONO/CRASH GATE）</option>
-                <option value="over40">40万円以上（FLYMEe中心）</option>
+                <option value="under10">〜10万円（Air Rhizome中心）</option>
+                <option value="10to20">10〜20万円（FLYMEe / La Vita中心）</option>
+                <option value="20to40">20〜40万円（MASTERWAL / ACTUS中心）</option>
+                <option value="over40">40万円以上（MASTERWAL / FLYMEe中心）</option>
               </select>
             </div>
 
