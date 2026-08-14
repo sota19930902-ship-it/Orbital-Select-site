@@ -174,8 +174,8 @@ export const PRODUCTS: Product[] = (() => {
         color: '–',
         sizeCategory: '標準',
         tags: [brandName, category],
-        editorialComment: `スプレッドシートAPIからリアルタイム同期された${brandName}の注目製品。`,
-        pros: ['正規パートナー取扱品', 'リアルタイム価格情報'],
+        editorialComment: `${brandName}のアイコニックなデザインと確かな品質を誇る注目コレクション。`,
+        pros: ['正規パートナー取扱品', '上質なデザイン・品質保証'],
         cons: ['最新在庫状況は公式サイトをご確認ください'],
         targetUser: `${brandName}の上質なデザイン家具をお探しの方`,
         shopLinks: [

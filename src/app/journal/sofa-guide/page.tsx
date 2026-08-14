@@ -199,19 +199,27 @@ export default function SofaGuideArticlePage() {
                 style={{
                   display: 'flex',
                   alignItems: 'baseline',
-                  gap: '8px',
-                  padding: '12px 16px',
+                  justifyContent: 'space-between',
+                  padding: '12px 18px',
                   backgroundColor: 'var(--bg-sub)',
-                  borderRadius: '8px',
-                  marginBottom: '16px',
+                  borderRadius: '10px',
+                  marginBottom: '18px',
+                  border: '1px solid var(--border-light)',
                 }}
               >
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>参考価格（税込）:</span>
-                <span style={{ fontSize: '1.45rem', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'var(--font-en)' }}>
-                  ¥{product.price.toLocaleString()}
+                <span style={{ fontSize: '0.84rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                  参考価格（税込）
                 </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--accent-gold)', fontWeight: 600, marginLeft: 'auto' }}>
-                  リアルタイム同期
+                <span
+                  style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 700,
+                    color: 'var(--text-main)',
+                    fontFamily: 'var(--font-en)',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  ¥{product.price.toLocaleString()}
                 </span>
               </div>
 
