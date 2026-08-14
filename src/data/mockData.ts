@@ -141,7 +141,8 @@ export function extractProductImages(sp: Record<string, any>, fallbackUrl: strin
   const addUrl = (val: any) => {
     if (!val) return;
     if (typeof val === 'string') {
-      const matches = val.match(/https?:\/\/[^\s,;"'|<>()[\]{}]+/gi);
+      const normalized = val.replace(/\{width\}/gi, '800');
+      const matches = normalized.match(/https?:\/\/[^\s,;"'|<>()[\]{}]+/gi);
       if (matches) {
         matches.forEach((raw) => {
           const clean = raw.trim().replace(/[),;.]+$/, '');
