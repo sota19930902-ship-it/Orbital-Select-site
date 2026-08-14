@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: '【2026年最新】デザインソファの選び方と厳選5選｜Orbital Select',
   description:
-    'リビングの主役となるソファ選びで後悔しないための3つの基準と、MASTERWALやLigne Rosetなど上質空間をつくる名作ソファを徹底解説。',
+    '後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。',
   keywords: [
     'ソファ 選び方',
     'デザインソファ',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '【2026年最新】デザインソファの選び方と厳選5選｜Orbital Select',
     description:
-      'リビングの主役となるソファ選びで後悔しないための3つの基準と、MASTERWALやLigne Rosetなど上質空間をつくる名作ソファを徹底解説。',
+      '後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。',
     type: 'article',
     publishedTime: '2026-08-14T00:00:00Z',
     authors: ['ORBITAL SELECT Editorial Team'],
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: '【2026年最新】デザインソファの選び方と厳選5選｜Orbital Select',
     description:
-      'リビングの主役となるソファ選びで後悔しないための3つの基準と、MASTERWALやLigne Rosetなど上質空間をつくる名作ソファを徹底解説。',
+      '後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。',
     images: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80'],
   },
 };

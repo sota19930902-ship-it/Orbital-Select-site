@@ -372,7 +372,7 @@ export default function SofaGuideArticlePage() {
                 fontWeight: 300,
               }}
             >
-              リビングの主役となるソファ選びで後悔しないための3つの基準と、MASTERWALやLigne Rosetなど上質空間をつくる名作ソファを徹底解説。
+              後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。
             </p>
           </div>
         </section>

@@ -207,7 +207,7 @@ export const VOYAGER_JOURNAL_ARTICLES: Article[] = [
   {
     id: 'sofa-guide',
     title: '【2026年最新】一生モノに出会う「デザインソファの選び方」と厳選モデル5選',
-    subtitle: 'リビングの主役となるソファ選びで後悔しないための3つの基準と、MASTERWALやLigne Rosetなど上質空間をつくる名作ソファを徹底解説。',
+    subtitle: '後悔しないソファ選びの3つの基準を解説。FLYMEeのROSETTogoやMASTERWALの無垢ローソファなど、空間を格上げする厳選デザインソファ5選をご紹介。',
     category: 'ソファ',
     readTime: '6分',
     date: '2026-08-14',
