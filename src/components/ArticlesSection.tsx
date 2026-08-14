@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { ARTICLES } from '../data/mockData';
 import { Clock, ChevronRight, Layers, Camera } from 'lucide-react';
 
 export const ArticlesSection: React.FC = () => {
+  if (!ARTICLES || ARTICLES.length === 0) return null;
+
   return (
     <section style={{ padding: '80px 0', backgroundColor: 'var(--bg-sub)', borderTop: '1px solid var(--border-light)' }} id="articles-section">
       <div className="container">
@@ -19,36 +22,41 @@ export const ArticlesSection: React.FC = () => {
           </p>
         </div>
 
-        {/* 6 Articles Grid with Doorway Frame Arch Tops */}
+        {/* Articles Grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
           gap: '36px',
         }}>
           {ARTICLES.map((article) => (
-            <article
+            <Link
               key={article.id}
-              className="img-zoom-container"
-              style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-light)',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: 'var(--shadow-subtle)',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-subtle)';
-              }}
+              href={`/journal/${article.id}`}
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}
             >
+              <article
+                className="img-zoom-container"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-light)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: 'var(--shadow-subtle)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-subtle)';
+                }}
+              >
               {/* Doorway-shaped Image Frame (2/3 Compact Size) */}
               <div
                 className="doorway-frame"
@@ -130,6 +138,7 @@ export const ArticlesSection: React.FC = () => {
                 </div>
               </div>
             </article>
+            </Link>
           ))}
         </div>
       </div>

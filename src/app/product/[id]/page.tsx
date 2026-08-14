@@ -17,20 +17,35 @@ export default function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const productId = resolvedParams.id;
 
-  const product = PRODUCTS.find((p) => p.id === productId) || PRODUCTS[0];
-  const brandInfo = PARTNER_BRANDS_INFO.find((b) => b.id === product.partnerBrandId);
-
+  const product = PRODUCTS.find((p) => p.id === productId);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [wishlist, setWishlist] = useState<any[]>([]);
 
+  if (!product) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
+        <Header wishlistCount={0} onOpenWishlist={() => {}} />
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', textAlign: 'center' }}>
+          <div>
+            <h1 style={{ marginBottom: '8px' }}>商品が見つかりません</h1>
+            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>この商品は存在しないか、スプレッドシートにまだ登録されていません。</p>
+            <Link href="/search" className="btn-primary">商品一覧へ戻る</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const brandInfo = PARTNER_BRANDS_INFO.find((b) => b.id === product.partnerBrandId);
   const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
-
-
 
   // Similar Products
   const similarProducts = PRODUCTS.filter(
     (p) => p.id !== product.id && (p.category === product.category || p.partnerBrandId === product.partnerBrandId)
   ).slice(0, 4);
+
+
 
   // Related Articles
   const relatedArticles = VOYAGER_JOURNAL_ARTICLES.filter(

@@ -15,7 +15,23 @@ export default function JournalArticleDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const articleId = resolvedParams.id;
 
-  const article = VOYAGER_JOURNAL_ARTICLES.find((a) => a.id === articleId) || VOYAGER_JOURNAL_ARTICLES[0];
+  const article = VOYAGER_JOURNAL_ARTICLES.find((a) => a.id === articleId);
+  if (!article) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
+        <Header wishlistCount={0} onOpenWishlist={() => {}} />
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', textAlign: 'center' }}>
+          <div>
+            <BookOpen size={48} style={{ marginBottom: '16px', opacity: 0.4 }} />
+            <h1 style={{ marginBottom: '8px' }}>記事が見つかりません</h1>
+            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>この記事は存在しないか、まだ公開されていません。</p>
+            <Link href="/journal" className="btn-primary">記事一覧へ戻る</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   const mentionedBrands = PARTNER_BRANDS_INFO.filter(
     (b) => article.comparedBrands?.includes(b.name) || article.tags.includes(b.name)
   );

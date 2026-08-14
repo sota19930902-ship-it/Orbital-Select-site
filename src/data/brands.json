@@ -1,0 +1,42 @@
+[
+  {
+    "brand_id": "flymee",
+    "brand_name": "FLYMEe",
+    "official_url": "",
+    "affiliate_top_url": "https://flymee.jp/",
+    "style": "",
+    "enabled": ""
+  },
+  {
+    "brand_id": "masterwal",
+    "brand_name": "MASTERWAL",
+    "official_url": "",
+    "affiliate_top_url": "https://www.masterwal.jp/shop/",
+    "style": "",
+    "enabled": ""
+  },
+  {
+    "brand_id": "actus",
+    "brand_name": "ACTUS",
+    "official_url": "",
+    "affiliate_top_url": "",
+    "style": "",
+    "enabled": ""
+  },
+  {
+    "brand_id": "air-rhizome",
+    "brand_name": "Air Rhizome Interior",
+    "official_url": "",
+    "affiliate_top_url": "http://www.air-r.jp/",
+    "style": "",
+    "enabled": ""
+  },
+  {
+    "brand_id": "lavita",
+    "brand_name": "La Vita",
+    "official_url": "",
+    "affiliate_top_url": "https://lavita-shop.jp/",
+    "style": "",
+    "enabled": ""
+  }
+]

@@ -16,10 +16,29 @@ export default function CollectionDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const collectionId = resolvedParams.id;
 
-  const collection = ORBIT_COLLECTIONS.find((c) => c.id === collectionId) || ORBIT_COLLECTIONS[0];
-  const collectionProducts = PRODUCTS.filter((p) => collection.productIds.includes(p.id));
+  const collection = ORBIT_COLLECTIONS.find((c) => c.id === collectionId);
+  const collectionProducts = collection ? PRODUCTS.filter((p) => collection.productIds.includes(p.id)) : [];
 
   const [wishlist, setWishlist] = useState<any[]>([]);
+
+  if (!collection) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
+        <Header wishlistCount={0} onOpenWishlist={() => {}} />
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', textAlign: 'center' }}>
+          <div>
+            <Layers size={48} style={{ marginBottom: '16px', opacity: 0.4 }} />
+            <h1 style={{ marginBottom: '8px' }}>コレクションが見つかりません</h1>
+            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>このコレクションは存在しないか、まだ公開されていません。</p>
+            <Link href="/collections" className="btn-primary">コレクション一覧へ戻る</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+
 
   const handleToggleWishlist = (p: any) => {
     setWishlist((prev) => (prev.some((item) => item.id === p.id) ? prev.filter((item) => item.id !== p.id) : [...prev, p]));

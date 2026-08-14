@@ -18,19 +18,38 @@ export default function BrandDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const brandId = resolvedParams.id;
 
-  const brand = PARTNER_BRANDS_INFO.find((b) => b.id === brandId) || PARTNER_BRANDS_INFO[0];
-  const brandProducts = PRODUCTS.filter((p) => p.partnerBrandId === brand.id);
-  const relatedArticles = VOYAGER_JOURNAL_ARTICLES.filter((a) =>
-    a.comparedBrands?.includes(brand.name) || a.tags.includes(brand.name) || a.comparedBrands?.includes(brand.jpName)
-  );
-
+  const brand = PARTNER_BRANDS_INFO.find((b) => b.id === brandId);
   const [wishlist, setWishlist] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 40;
 
+  if (!brand) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
+        <Header wishlistCount={0} onOpenWishlist={() => {}} />
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', textAlign: 'center' }}>
+          <div>
+            <Sparkles size={48} style={{ marginBottom: '16px', opacity: 0.4 }} />
+            <h1 style={{ marginBottom: '8px' }}>ブランドが見つかりません</h1>
+            <p style={{ color: 'var(--text-sub)', marginBottom: '24px' }}>このブランドはスプレッドシートにまだ登録されていません。</p>
+            <Link href="/brands" className="btn-primary">ブランド一覧へ戻る</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const brandProducts = PRODUCTS.filter((p) => p.partnerBrandId === brand.id);
+  const relatedArticles = VOYAGER_JOURNAL_ARTICLES.filter((a) =>
+    a.comparedBrands?.includes(brand.name) || a.tags.includes(brand.name)
+  );
+
   const totalPages = Math.ceil(brandProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedProducts = brandProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
