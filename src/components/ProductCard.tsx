@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Product } from '../types';
 import { getAffiliateUrl } from '../config/affiliate';
-import { Star, ExternalLink, Scale, ChevronRight } from 'lucide-react';
+import { Star, ExternalLink, Scale, ChevronRight, Images } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -23,9 +23,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onToggleCompare,
   isInCompare = false,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
 
-
+  const images = product.images && product.images.length > 0 ? product.images : [];
+  const primaryImage = images[0] || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
+  const displayImage = isHovered && images.length > 1 ? images[1] : primaryImage;
 
   const categoryLabels: Record<string, string> = {
     sofa: 'ソファ',
@@ -58,10 +61,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         position: 'relative',
       }}
       onMouseEnter={(e) => {
+        setIsHovered(true);
         e.currentTarget.style.transform = 'translateY(-4px)';
         e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
       }}
       onMouseLeave={(e) => {
+        setIsHovered(false);
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'var(--shadow-subtle)';
       }}
@@ -83,7 +88,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       >
         <Link href={`/product/${product.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
           <img
-            src={product.images && product.images.length > 0 ? product.images[0] : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>'}
+            src={displayImage}
             alt={product.name}
             onError={(e) => {
               e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
@@ -93,10 +98,37 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               height: '100%',
               objectFit: 'contain',
               objectPosition: 'center',
+              transition: 'opacity 0.25s ease',
             }}
           />
-
         </Link>
+
+        {/* Multi-image photo count badge */}
+        {images.length > 1 && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              backgroundColor: 'rgba(11, 16, 32, 0.78)',
+              color: '#FFFFFF',
+              backdropFilter: 'blur(4px)',
+              padding: '3px 8px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.68rem',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              zIndex: 5,
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              pointerEvents: 'none',
+            }}
+          >
+            <Images size={12} color="var(--accent-gold)" />
+            <span>{images.length} 枚</span>
+          </div>
+        )}
 
         {/* Micro Satellite Orbit Effect */}
         <div

@@ -10,10 +10,12 @@ export interface SpreadsheetProduct {
   category_id: string;
   price: number;
   image_url: string;
-  images?: string[];
+  images?: string[] | string;
+  image_urls?: string[] | string;
   description: string;
   status: string;
   updated_at: string;
+  [key: string]: any;
 }
 
 export interface SpreadsheetBrand {

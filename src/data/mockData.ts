@@ -125,6 +125,54 @@ export const PARTNER_BRANDS_INFO: PartnerBrandInfo[] = (brandsJson as Spreadshee
 });
 
 // ─────────────────────────────────────────────
+// 全商品・全形式対応 複数画像抽出ヘルパー関数
+// ─────────────────────────────────────────────
+/**
+ * スプレッドシートやAPI、CSV等の様々な入力形式から有効な画像URLを配列として抽出
+ * - カンマ区切り: "url1, url2, url3"
+ * - 改行区切り: "url1\nurl2"
+ * - セミコロン / パイプ / 空白区切り: "url1; url2", "url1 | url2"
+ * - 配列形式: images: ["url1", "url2"]
+ * - 連番カラム: image_url_1, image_url_2, image1, image2 等
+ */
+export function extractProductImages(sp: Record<string, any>, fallbackUrl: string): string[] {
+  const extracted: string[] = [];
+
+  const addUrl = (val: any) => {
+    if (!val) return;
+    if (typeof val === 'string') {
+      const matches = val.match(/https?:\/\/[^\s,;"'|<>()[\]{}]+/gi);
+      if (matches) {
+        matches.forEach((raw) => {
+          const clean = raw.trim().replace(/[),;.]+$/, '');
+          if (clean && !extracted.includes(clean)) {
+            extracted.push(clean);
+          }
+        });
+      }
+    } else if (Array.isArray(val)) {
+      val.forEach(addUrl);
+    }
+  };
+
+  // 1. sp.images
+  if (sp.images) addUrl(sp.images);
+  // 2. sp.image_urls
+  if (sp.image_urls) addUrl(sp.image_urls);
+  // 3. sp.image_url
+  if (sp.image_url) addUrl(sp.image_url);
+
+  // 4. 連番カラム (image_url_1, image_url_2, image1, image2, ...)
+  Object.keys(sp).forEach((key) => {
+    if (/^image(_url)?_?\d+$/i.test(key)) {
+      addUrl(sp[key]);
+    }
+  });
+
+  return extracted.length > 0 ? extracted : [fallbackUrl];
+}
+
+// ─────────────────────────────────────────────
 // PRODUCTS（products.json から生成）
 // ─────────────────────────────────────────────
 export const PRODUCTS: Product[] = (() => {
@@ -143,18 +191,8 @@ export const PRODUCTS: Product[] = (() => {
       else if (price <= 400000) priceRangeId = '20to40';
       else priceRangeId = 'over40';
 
-      // Extract multiple images if comma-separated, or use fallback
-      let parsedImages: string[] = [];
-      if (Array.isArray(sp.images) && sp.images.length > 0) {
-        parsedImages = sp.images.filter((u) => typeof u === 'string' && u.trim().startsWith('http')).map((u) => u.trim());
-      } else if (sp.image_url && typeof sp.image_url === 'string') {
-        parsedImages = sp.image_url
-          .split(',')
-          .map((u) => u.trim())
-          .filter((u) => u.startsWith('http'));
-      }
-
-      const images = parsedImages.length > 0 ? parsedImages : [FALLBACK_IMAGES[category]];
+      // 全商品対応：すべての画像URLを抽出
+      const images = extractProductImages(sp, FALLBACK_IMAGES[category]);
       const imageUrl = images[0];
 
       const affiliateUrl = (sp.affiliate_url && sp.affiliate_url.startsWith('http'))

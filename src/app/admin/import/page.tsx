@@ -12,9 +12,9 @@ export default function AdminImportPage() {
   const [parsedCount, setParsedCount] = useState<number | null>(null);
 
   const sampleCsv = `brand_id,product_name,category,price,official_url,image_url,description
-masterwal,DANISH SOFA 3P,sofa,462000,https://www.masterwal.jp/shop/g/gDNSSO/,https://images.unsplash.com/photo-1555041469-a586c61ea9bc,Low & Comfortableローソファ
+masterwal,DANISH SOFA 3P,sofa,462000,https://www.masterwal.jp/shop/g/gDNSSO/,"https://images.unsplash.com/photo-1555041469-a586c61ea9bc, https://images.unsplash.com/photo-1586023492125",Low & Comfortableローソファ（複数画像対応）
 air_rhizome,3人掛けカウチソファ Wism,sofa,49980,https://www.air-r.jp/products/list.php?name=Wism,https://images.unsplash.com/photo-1586023492125,北欧カウチソファ
-beaubelle,4灯シーリングライト RECONTE,lighting,18800,https://beaubelle.shop/?s=RECONTE,https://images.unsplash.com/photo-1507473885765,木目調シーリングライト
+beaubelle,4灯シーリングライト RECONTE,lighting,18800,https://beaubelle.shop/?s=RECONTE,"https://images.unsplash.com/photo-1507473885765, https://images.unsplash.com/photo-1540932239986",木目調シーリングライト
 lavita,Louis Poulsen PH 5,lighting,159500,https://lavita-shop.jp/?s=PH5,https://images.unsplash.com/photo-1540932239986,北欧名作ペンダントランプ`;
 
   const handleImport = () => {
