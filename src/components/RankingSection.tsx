@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Product } from '../types';
 import { getAffiliateUrl } from '../config/affiliate';
-import { Star, Heart, ExternalLink, MessageSquareQuote } from 'lucide-react';
+import { Star, Heart, ExternalLink, Sparkles, Trophy } from 'lucide-react';
 
 interface RankingSectionProps {
   products: Product[];
@@ -18,21 +18,100 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
   onToggleWishlist,
   isInWishlist,
 }) => {
-  const top10 = products.slice(0, 10);
+  const [activeTab, setActiveTab] = useState<'all' | 'flymee' | 'masterwal' | 'lavita'>('all');
+
+  // Compute balanced top 10 for 'all', or brand-specific top 10
+  const displayedProducts = useMemo(() => {
+    if (activeTab !== 'all') {
+      return products.filter((p) => p.partnerBrandId === activeTab).slice(0, 10);
+    }
+
+    // Balanced Top 10 across all brands (max 4 per brand)
+    const brandCounts: Record<string, number> = {};
+    const selected: Product[] = [];
+
+    // First pass: sorted by rating & reviews
+    const sorted = [...products].sort((a, b) => {
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      return (b.reviewCount || 0) - (a.reviewCount || 0);
+    });
+
+    for (const p of sorted) {
+      const bId = p.partnerBrandId;
+      const count = brandCounts[bId] || 0;
+      if (count < 4 && selected.length < 10) {
+        brandCounts[bId] = count + 1;
+        selected.push(p);
+      }
+    }
+
+    // If still under 10 (e.g. fewer products in other brands), fill up remaining
+    if (selected.length < 10) {
+      for (const p of sorted) {
+        if (!selected.some((s) => s.id === p.id) && selected.length < 10) {
+          selected.push(p);
+        }
+      }
+    }
+
+    return selected;
+  }, [products, activeTab]);
 
   return (
     <section style={{ padding: '80px 0', backgroundColor: '#FFFFFF' }} id="ranking-section">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">Featured Orbit</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--accent-gold)', marginBottom: '8px', fontSize: '0.85rem', fontWeight: '600' }}>
+            <Trophy size={16} />
+            <span>Featured Orbit Rankings</span>
+          </div>
           <h2 className="section-title">人気家具ランキング TOP 10</h2>
-          <p className="section-subtitle">
-            提携ブランドの全商品カタログ（ACTUS、MASTERWAL等）から、
-            <br />
-            公式ストア購入者レビュー・満足度スコアを基に個々の商品を直接抽出した最高評価TOP 10。
+          <p className="section-subtitle" style={{ marginBottom: '8px' }}>
+            提携ブランドの全商品カタログから、公式ストア購入者レビュー・満足度スコアを基に厳選した最高評価アイテム。
+          </p>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0 auto 24px', maxWidth: '640px' }}>
+            ※提携各公式ストアでの販売実績・購入者レビュー評価・注目度データを基に独自算出
           </p>
 
-
+          {/* Brand Tabs */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              gap: '8px',
+              marginTop: '16px',
+            }}
+          >
+            {[
+              { id: 'all', label: '総合人気 TOP 10' },
+              { id: 'flymee', label: 'FLYMEe' },
+              { id: 'masterwal', label: 'MASTERWAL' },
+              { id: 'lavita', label: 'La Vita' },
+            ].map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  style={{
+                    padding: '8px 20px',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.86rem',
+                    fontWeight: isActive ? '700' : '500',
+                    backgroundColor: isActive ? 'var(--bg-space)' : 'var(--bg-sub)',
+                    color: isActive ? 'var(--accent-gold)' : 'var(--text-main)',
+                    border: isActive ? '1px solid var(--accent-gold)' : '1px solid var(--border-light)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.15)' : 'none',
+                  }}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* TOP 10 Grid (2 Columns Layout) */}
@@ -43,13 +122,14 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
             gap: '28px',
           }}
         >
-          {top10.map((product, idx) => {
+          {displayedProducts.map((product, idx) => {
             const rank = idx + 1;
             const isWish = isInWishlist(product.id);
             const badgeClass =
               rank === 1 ? 'rank-badge-1' : rank === 2 ? 'rank-badge-2' : rank === 3 ? 'rank-badge-3' : 'rank-badge-other';
 
-            const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
+            const affiliateUrl = product.shopLinks[0]?.url || product.affiliateUrl || getAffiliateUrl(product.partnerBrandId, undefined, product.name);
+            const cleanTags = (product.tags || []).filter((t) => t && !/^(nan|null|undefined|不明|未記載|記載なし|-|–)$/i.test(t));
 
             return (
               <div
@@ -78,7 +158,7 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                 {/* Rank Badge */}
                 <div className={`rank-badge ${badgeClass}`}>{rank}</div>
 
-                {/* Product Image (Contain mode so full furniture is displayed) */}
+                {/* Product Image */}
                 <div
                   className="img-zoom-container"
                   style={{
@@ -98,6 +178,8 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                   <img
                     src={product.images && product.images.length > 0 ? product.images[0] : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>'}
                     alt={product.name}
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
                     }}
@@ -127,7 +209,10 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                       justifyContent: 'center',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                       zIndex: 5,
+                      cursor: 'pointer',
+                      border: 'none',
                     }}
+                    title={isWish ? 'In Orbit から外す' : 'In Orbit に保存'}
                   >
                     <Heart size={16} color="var(--accent-gold)" fill={isWish ? 'var(--accent-gold)' : 'transparent'} />
                   </button>
@@ -190,25 +275,27 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                   </div>
 
                   {/* Feature Tags */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
-                    {product.tags.map((tag, tIdx) => (
-                      <span
-                        key={tIdx}
-                        style={{
-                          fontSize: '0.75rem',
-                          padding: '3px 9px',
-                          borderRadius: 'var(--radius-xs)',
-                          backgroundColor: 'var(--bg-sub)',
-                          color: 'var(--text-sub)',
-                          border: '1px solid var(--border-light)',
-                        }}
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+                  {cleanTags.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
+                      {cleanTags.map((tag, tIdx) => (
+                        <span
+                          key={tIdx}
+                          style={{
+                            fontSize: '0.75rem',
+                            padding: '3px 9px',
+                            borderRadius: 'var(--radius-xs)',
+                            backgroundColor: 'var(--bg-sub)',
+                            color: 'var(--text-sub)',
+                            border: '1px solid var(--border-light)',
+                          }}
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
-                  {/* Editorial Comment */}
+                  {/* Real Product Description / Features */}
                   <div
                     style={{
                       padding: '12px 14px',
@@ -224,14 +311,14 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                       gap: '8px',
                     }}
                   >
-                    <MessageSquareQuote size={16} color="var(--accent-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <Sparkles size={15} color="var(--accent-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ wordBreak: 'break-word' }}>
-                      <strong>編集部コメント:</strong> {product.editorialComment}
-
+                      <strong style={{ display: 'block', color: 'var(--accent-gold)', marginBottom: '2px', fontSize: '0.78rem' }}>商品の特徴 / 概要:</strong>
+                      {product.description || '詳細は商品ページでご確認ください。'}
                     </div>
                   </div>
 
-                  {/* 2 CTA Buttons - Clean non-overflow layout */}
+                  {/* 2 CTA Buttons */}
                   <div style={{ marginTop: 'auto', display: 'flex', gap: '10px' }}>
                     <button
                       onClick={() => onSelectProduct(product)}
@@ -269,3 +356,4 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
     </section>
   );
 };
+

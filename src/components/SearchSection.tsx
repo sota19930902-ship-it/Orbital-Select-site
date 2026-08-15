@@ -21,12 +21,17 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
   resultCount,
 }) => {
   return (
-    <section style={{
-      padding: '44px 0',
-      backgroundColor: 'var(--bg-sub)',
-      borderBottom: '1px solid var(--border-light)',
-    }} id="search-section">
+    <section style={{ padding: '40px 0 60px', backgroundColor: 'var(--bg-main)' }} id="search-filter-section">
       <div className="container">
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <span className="section-tag">CUSTOM SEARCH</span>
+          <h2 className="section-title">10項目から細かく絞り込む（詳細検索）</h2>
+          <p className="section-subtitle">
+            素材・カラー・サイズオーダー・ブランドなど、お好みの詳細条件で151品目を一括横断検索。
+          </p>
+        </div>
+
         <div style={{
           backgroundColor: '#FFFFFF',
           borderRadius: 'var(--radius-md)',
@@ -38,9 +43,9 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <SlidersHorizontal size={18} color="var(--accent-gold)" />
-              <h2 style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)' }}>
-                条件を指定して家具を探す（10項目詳細検索）
-              </h2>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: '600', color: 'var(--text-main)', margin: 0 }}>
+                詳細フィルター設定
+              </h3>
             </div>
             <button
               onClick={onResetFilters}
@@ -50,6 +55,9 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               <RefreshCw size={14} /> 条件リセット
@@ -71,7 +79,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
               <div style={{ position: 'relative' }}>
                 <input
                   type="text"
-                  placeholder="例：ウォールナット, デニッシュソファ, MASTERWAL..."
+                  placeholder="例：ウォールナット, デニッシュソファ, MASTERWAL, レザー..."
                   value={filters.query}
                   onChange={(e) => onFilterChange({ query: e.target.value })}
                   style={{
@@ -115,13 +123,13 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                   outline: 'none',
                 }}
               >
-                <option value="all">すべてのカテゴリー</option>
-                <option value="sofa">ソファ</option>
-                <option value="table">ダイニングテーブル</option>
-                <option value="chair">チェア</option>
-                <option value="lighting">照明</option>
-                <option value="storage">収納</option>
-                <option value="desk">デスク</option>
+                <option value="all">すべてのカテゴリー (151商品)</option>
+                <option value="table">ダイニングテーブル (75商品)</option>
+                <option value="chair">チェア・椅子 (31商品)</option>
+                <option value="desk">デスク・机 (24商品)</option>
+                <option value="sofa">ソファ (15商品)</option>
+                <option value="lighting">照明 (6商品)</option>
+                <option value="storage">収納・シェルフ</option>
                 <option value="tv-board">TVボード</option>
                 <option value="bed">ベッド</option>
               </select>
@@ -150,7 +158,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 <option value="all">全パートナーブランドから探す</option>
                 {PARTNER_BRANDS_INFO.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.name}（{b.taste || b.role}）
+                    {b.name} {b.productCount && b.productCount > 0 ? `(${b.productCount}商品)` : '（近日追加予定）'}
                   </option>
                 ))}
               </select>

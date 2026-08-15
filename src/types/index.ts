@@ -41,6 +41,8 @@ export interface PartnerBrandInfo {
   heroImage: string;
   categories: ProductCategory[];
   isFeaturedPartner?: boolean;
+  productCount?: number;
+  isComingSoon?: boolean;
   logoImage?: string;
   affiliateBannerUrl?: string;
 }
@@ -83,6 +85,7 @@ export interface Product {
   cons: string[];
   targetUser: string;
   shopLinks: ShopLink[];
+  affiliateUrl?: string;
   isTopRanked?: boolean;
   isEditorsPick?: boolean;
   isNewArrival?: boolean;

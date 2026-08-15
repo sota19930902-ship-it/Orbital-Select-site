@@ -57,7 +57,7 @@ export default function ProductDetailPage({ params }: PageProps) {
     setWishlist((prev) => (prev.some((item) => item.id === p.id) ? prev.filter((item) => item.id !== p.id) : [...prev, p]));
   };
 
-  const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
+  const affiliateUrl = product.shopLinks[0]?.url || product.affiliateUrl || getAffiliateUrl(product.partnerBrandId, undefined, product.name);
 
   // Similar Products
   const similarProducts = PRODUCTS.filter(
@@ -312,36 +312,30 @@ export default function ProductDetailPage({ params }: PageProps) {
                 <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)' }}>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>サイズ (Size)</span>
                   <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
-                    {product.size && product.size !== '-' && product.size !== '–'
-                      ? product.size
-                      : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                    {product.size || (product.dimensions && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.dimensions) ? product.dimensions : 'サイズ詳細は公式サイトでご確認ください')}
                   </strong>
                 </div>
                 <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)' }}>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>カラー (Color)</span>
                   <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
-                    {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
-                      ? product.colors
-                      : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                    {product.colors || (product.color && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.color) ? product.color : 'カラー詳細は公式サイトでご確認ください')}
                   </strong>
                 </div>
                 <div style={{ backgroundColor: 'var(--bg-sub)', padding: '12px 14px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-light)', gridColumn: 'span 2' }}>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.74rem', marginBottom: '2px', fontWeight: '600' }}>材質・素材 (Materials)</span>
                   <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>
-                    {product.materialText && product.materialText !== '-' && product.materialText !== '–'
-                      ? product.materialText
-                      : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join(' / ') : '–')}
+                    {product.materialText || (product.materials && product.materials.length > 0 && !['不明', '未記載', '-', '–', 'NaN'].includes(product.materials[0]) ? product.materials.join(' / ') : '材質詳細は公式サイトでご確認ください')}
                   </strong>
                 </div>
               </div>
 
-              {/* Editorial Comment */}
+              {/* Real Product Description / Notes */}
               <div style={{ padding: '16px', borderRadius: 'var(--radius-xs)', backgroundColor: 'var(--accent-gold-bg)', border: '1px solid var(--accent-gold-border)', marginBottom: '24px' }}>
                 <div style={{ fontSize: '0.76rem', color: 'var(--accent-gold)', fontWeight: '600', marginBottom: '4px', letterSpacing: '0.08em' }}>
-                  ORBITAL SELECT EDITORIAL NOTE
+                  商品説明 ＆ 特徴 (Product Features)
                 </div>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-main)', lineHeight: '1.75' }}>
-                  {product.editorialComment}
+                  {product.description || '詳細は商品ページでご確認ください。'}
                 </p>
               </div>
 
@@ -390,25 +384,19 @@ export default function ProductDetailPage({ params }: PageProps) {
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>寸法 (サイズ)</th>
                     <td style={{ padding: '12px' }}>
-                      {product.size && product.size !== '-' && product.size !== '–'
-                        ? product.size
-                        : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                      {product.size || (product.dimensions && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.dimensions) ? product.dimensions : 'サイズ詳細は公式サイトでご確認ください')}
                     </td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>素材・材質</th>
                     <td style={{ padding: '12px' }}>
-                      {product.materialText && product.materialText !== '-' && product.materialText !== '–'
-                        ? product.materialText
-                        : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join('、') : '–')}
+                      {product.materialText || (product.materials && product.materials.length > 0 && !['不明', '未記載', '-', '–', 'NaN'].includes(product.materials[0]) ? product.materials.join(' / ') : '材質詳細は公式サイトでご確認ください')}
                     </td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', backgroundColor: 'var(--bg-sub)', color: 'var(--text-sub)' }}>カラー展開</th>
                     <td style={{ padding: '12px' }}>
-                      {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
-                        ? product.colors
-                        : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                      {product.colors || (product.color && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.color) ? product.color : 'カラー詳細は公式サイトでご確認ください')}
                     </td>
                   </tr>
                   <tr>

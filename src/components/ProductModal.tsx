@@ -367,10 +367,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           marginBottom: '40px',
         }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', marginBottom: '16px' }}>
-            商品説明 ＆ 詳細スペック
+            商品説明 ＆ 特徴
           </h3>
           <p style={{ fontSize: '0.92rem', color: 'var(--text-sub)', lineHeight: '1.8', marginBottom: '24px', wordBreak: 'break-word' }}>
-            {product.description}
+            {product.description || '詳細は商品ページでご確認ください。'}
           </p>
 
           {/* Specs Table & Tags */}
@@ -415,9 +415,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   カラー / バリエーション
                 </span>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
-                  {product.colors && !['不明', '未記載', '記載なし', '-'].includes(product.colors)
-                    ? product.colors
-                    : (product.color && !['不明', '未記載', '記載なし', '-'].includes(product.color) ? product.color : '–')}
+                  {product.colors || (product.color && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.color) ? product.color : 'カラー詳細は公式サイトでご確認ください')}
                 </div>
               </div>
 
@@ -427,9 +425,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   サイズ / 寸法
                 </span>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
-                  {product.size && product.size !== '-' && product.size !== '–'
-                    ? product.size
-                    : (product.dimensions && product.dimensions !== '-' && product.dimensions !== '–' ? product.dimensions : '–')}
+                  {product.size || (product.dimensions && !['不明', '未記載', '記載なし', '-', '–', 'NaN', 'undefined'].includes(product.dimensions) ? product.dimensions : 'サイズ詳細は公式サイトでご確認ください')}
                 </div>
               </div>
 
@@ -439,9 +435,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   材質 / 素材
                 </span>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-main)', fontWeight: '500' }}>
-                  {product.materialText && product.materialText !== '-' && product.materialText !== '–'
-                    ? product.materialText
-                    : (product.materials && product.materials.length > 0 && product.materials[0] !== '-' ? product.materials.join(' / ') : '–')}
+                  {product.materialText || (product.materials && product.materials.length > 0 && !['不明', '未記載', '-', '–', 'NaN'].includes(product.materials[0]) ? product.materials.join(' / ') : '材質詳細は公式サイトでご確認ください')}
                 </div>
               </div>
 

@@ -86,8 +86,8 @@ export const FeaturedBrandsSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Main Category Gold Pill Badge (Fixed 36px height container + nowrap for perfect row alignment) */}
-                <div style={{ height: '36px', display: 'flex', alignItems: 'center', marginBottom: '14px' }}>
+                {/* Main Category Gold Pill Badge */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '14px' }}>
                   <div
                     style={{
                       display: 'inline-flex',
@@ -106,6 +106,35 @@ export const FeaturedBrandsSection: React.FC = () => {
                     <ShieldCheck size={12} style={{ flexShrink: 0 }} />
                     <span>{brand.role}</span>
                   </div>
+
+                  {brand.productCount && brand.productCount > 0 ? (
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        color: '#FFFFFF',
+                        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        padding: '3px 8px',
+                        borderRadius: 'var(--radius-full)',
+                        fontWeight: '600',
+                      }}
+                    >
+                      {brand.productCount} 点掲載中
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        color: 'var(--accent-gold)',
+                        backgroundColor: 'rgba(212, 175, 55, 0.15)',
+                        border: '1px solid var(--accent-gold)',
+                        padding: '3px 8px',
+                        borderRadius: 'var(--radius-full)',
+                        fontWeight: '600',
+                      }}
+                    >
+                      Coming Soon
+                    </span>
+                  )}
                 </div>
 
 

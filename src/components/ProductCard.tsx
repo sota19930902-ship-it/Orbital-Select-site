@@ -24,7 +24,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isInCompare = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const affiliateUrl = getAffiliateUrl(product.partnerBrandId, undefined, product.name);
+  const affiliateUrl = product.shopLinks[0]?.url || product.affiliateUrl || getAffiliateUrl(product.partnerBrandId, undefined, product.name);
 
   const images = product.images && product.images.length > 0 ? product.images : [];
   const primaryImage = images[0] || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
@@ -263,41 +263,47 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ¥{product.price.toLocaleString()} <span style={{ fontSize: '0.75rem', fontWeight: '400', color: 'var(--text-sub)' }}>(税込目安)</span>
         </div>
 
-        {/* Feature Tags */}
-        {product.tags && product.tags.length > 0 && (
+        {/* Feature Tags (Filtered to exclude NaN, undefined, and empty values) */}
+        {product.tags && product.tags.filter((t) => t && !/^(nan|null|undefined|不明|未記載|記載なし|-|–)$/i.test(t)).length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '10px' }}>
-            {product.tags.slice(0, 3).map((tag, idx) => (
-              <span
-                key={idx}
-                style={{
-                  fontSize: '0.72rem',
-                  padding: '2px 6px',
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: 'var(--bg-sub)',
-                  color: 'var(--text-sub)',
-                  border: '1px solid var(--border-subtle)',
-                }}
-              >
-                #{tag}
-              </span>
-            ))}
+            {product.tags
+              .filter((t) => t && !/^(nan|null|undefined|不明|未記載|記載なし|-|–)$/i.test(t))
+              .slice(0, 3)
+              .map((tag, idx) => (
+                <span
+                  key={idx}
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '2px 6px',
+                    borderRadius: 'var(--radius-xs)',
+                    backgroundColor: 'var(--bg-sub)',
+                    color: 'var(--text-sub)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  #{tag}
+                </span>
+              ))}
           </div>
         )}
 
-        {/* Editorial Short Description (only if editorialComment exists) */}
-        {product.editorialComment && (
-          <p
-            style={{
-              fontSize: '0.82rem',
-              color: 'var(--text-sub)',
-              lineHeight: '1.6',
-              marginBottom: '16px',
-              wordBreak: 'break-word',
-            }}
-          >
-            {product.editorialComment}
-          </p>
-        )}
+        {/* Real Product Description (Spreadsheet description column) */}
+        <p
+          style={{
+            fontSize: '0.82rem',
+            color: 'var(--text-sub)',
+            lineHeight: '1.6',
+            marginBottom: '16px',
+            wordBreak: 'break-word',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            minHeight: '2.6em',
+          }}
+        >
+          {product.description || '詳細は商品ページでご確認ください。'}
+        </p>
 
         {/* CTA Buttons Row */}
         <div style={{ marginTop: 'auto', display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '8px' }}>
@@ -309,7 +315,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             詳細を見る
           </Link>
 
-          {/* Official Store CTA */}
+          {/* Official Store Direct Affiliate CTA */}
           <a
             href={affiliateUrl}
             target="_blank"

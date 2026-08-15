@@ -294,10 +294,33 @@ export default function Home() {
 
       {/* Main Content */}
       <main style={{ flex: 1 }}>
+        {/* PR Disclosure Bar */}
+        <div
+          style={{
+            backgroundColor: 'rgba(212, 175, 55, 0.08)',
+            borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+            padding: '10px 16px',
+            fontSize: '0.78rem',
+            color: 'var(--accent-gold)',
+            textAlign: 'center',
+            lineHeight: '1.5',
+          }}
+        >
+          <span>【PR / 広告開示】本サイトは提携各社のアフィリエイト広告プログラムに参加しており、適格販売により紹介料を獲得する場合があります。各商品の最新価格・在庫状況はリンク先の公式ストアにてご確認ください。</span>
+        </div>
+
         {/* ① Hero Section */}
         <Hero onScrollToRanking={handleScrollToRanking} />
 
-        {/* ② Search Section */}
+        {/* ② Quick Choice Section (かんたん3ステップ入口) */}
+        <QuickChoiceSection
+          onSelectChoice={(updated) => {
+            setFilters((prev) => ({ ...prev, ...updated }));
+            handleExecuteSearch();
+          }}
+        />
+
+        {/* ③ Search Section (10項目詳細検索) */}
         <SearchSection
           filters={filters}
           onFilterChange={(updated) => {
@@ -323,20 +346,12 @@ export default function Home() {
           resultCount={filteredProducts.length}
         />
 
-        {/* ③ Quick Choice Section */}
-        <QuickChoiceSection
-          onSelectChoice={(updated) => {
-            setFilters((prev) => ({ ...prev, ...updated }));
-            handleExecuteSearch();
-          }}
-        />
-
         {/* NEW Section: Featured Brands (Curated Affiliate Partners) */}
         <FeaturedBrandsSection />
 
         {/* ④ Popular Ranking (Featured Orbit) */}
         <RankingSection
-          products={top10Products}
+          products={PRODUCTS}
           onSelectProduct={(p) => setSelectedProduct(p)}
           onToggleWishlist={handleToggleWishlist}
           isInWishlist={isInWishlist}

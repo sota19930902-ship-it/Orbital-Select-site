@@ -9,18 +9,25 @@ interface QuickChoiceSectionProps {
 }
 
 export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelectChoice }) => {
+  const handleChoiceClick = (updated: Partial<SearchFilters>) => {
+    onSelectChoice(updated);
+    setTimeout(() => {
+      const el = document.getElementById('search-filter-section') || document.getElementById('search-result-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 50);
+  };
+
   return (
-    <section style={{ padding: '72px 0 56px', backgroundColor: 'var(--bg-main)' }}>
+    <section style={{ padding: '72px 0 56px', backgroundColor: 'var(--bg-main)' }} id="quick-choice-section">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">GUIDED NAVIGATION</span>
-          <h2 className="section-title">まず何を重視しますか？</h2>
+          <span className="section-tag">QUICK START</span>
+          <h2 className="section-title">まずは目的・こだわりから選ぶ（かんたん3ステップ）</h2>
           <p className="section-subtitle">
-            ブランド名を知らなくても安心。
-            <br />
-            ご希望の「価格」「テイスト」「部屋」から直感的に絞り込めます。
+            気になる「価格帯」「テイスト」「部屋」をタップするだけで、下部の詳細検索エンジンへ自動反映・絞り込みます。
           </p>
-
         </div>
 
         {/* 3 Large Choice Cards */}
@@ -51,21 +58,21 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
                 <Tag size={20} color="var(--accent-walnut)" />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>価格で探す</h3>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>① 価格で探す</h3>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-sub)' }}>ご予算に合わせて探す</span>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { id: 'under10', label: '〜10万円', brand: 'Air Rhizome中心（手頃で高コスパ）' },
-                { id: '10to20', label: '10〜20万円', brand: 'FLYMEe / La Vita（デザイン照明・家具）' },
-                { id: '20to40', label: '20〜40万円', brand: 'ACTUS / FLYMEe（上質モダン）' },
+                { id: 'under10', label: '〜10万円', brand: 'Air Rhizome / FLYMEe（手頃で高コスパ）' },
+                { id: '10to20', label: '10〜20万円', brand: 'FLYMEe / La Vita（デザイン照明・チェア）' },
+                { id: '20to40', label: '20〜40万円', brand: 'MASTERWAL / FLYMEe（上質無垢モダン）' },
                 { id: 'over40', label: '40万円以上', brand: 'MASTERWAL / FLYMEe（最高峰ラグジュアリー）' },
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => onSelectChoice({ priceRange: item.id })}
+                  onClick={() => handleChoiceClick({ priceRange: item.id })}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -120,21 +127,21 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
                 <Compass size={20} color="var(--accent-walnut)" />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>テイストで探す</h3>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>② テイストで探す</h3>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-sub)' }}>理想のインテリアスタイルから</span>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { id: 'nordic', label: '北欧・ナチュラル', brand: 'ACTUS + Air Rhizome' },
-                { id: 'minimal', label: 'ミニマル・モダン', brand: 'MASTERWAL + FLYMEe' },
-                { id: 'hotel', label: 'ホテルライク', brand: 'FLYMEe + La Vita' },
-                { id: 'vintage', label: 'ヴィンテージ・インダストリアル', brand: 'FLYMEe + MASTERWAL' },
+                { id: 'nordic', label: '北欧・ナチュラル', brand: 'La Vita + FLYMEe（名作照明・無垢）' },
+                { id: 'minimal', label: 'ミニマル・モダン', brand: 'MASTERWAL + FLYMEe（直線美・上質）' },
+                { id: 'hotel', label: 'ホテルライク', brand: 'MASTERWAL + La Vita（高級感・洗練）' },
+                { id: 'vintage', label: 'ヴィンテージ・インダストリアル', brand: 'FLYMEe + MASTERWAL（アイアン・レザー）' },
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => onSelectChoice({ taste: item.id })}
+                  onClick={() => handleChoiceClick({ taste: item.id })}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -189,7 +196,7 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
                 <Home size={20} color="var(--accent-walnut)" />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>部屋で探す</h3>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-main)' }}>③ 部屋で探す</h3>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-sub)' }}>配置するお部屋空間から</span>
               </div>
             </div>
@@ -197,13 +204,13 @@ export const QuickChoiceSection: React.FC<QuickChoiceSectionProps> = ({ onSelect
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
                 { id: 'living', label: 'リビング', desc: 'ソファ / ローテーブル / ラック' },
-                { id: 'dining', label: 'ダイニング', desc: 'ダイニングセット / ペンダント照明' },
-                { id: 'bedroom', label: '寝室', desc: 'ベッド / ナイトテーブル / ラグ' },
+                { id: 'dining', label: 'ダイニング', desc: 'ダイニングテーブル / チェア / ペンダント照明' },
+                { id: 'bedroom', label: '寝室', desc: 'ベッド / ナイトテーブル / スタンド照明' },
                 { id: 'study', label: '書斎・デスクワーク', desc: 'デスク / ワーキングチェア / キャビネット' },
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => onSelectChoice({ room: item.id })}
+                  onClick={() => handleChoiceClick({ room: item.id })}
                   style={{
                     display: 'flex',
                     alignItems: 'center',

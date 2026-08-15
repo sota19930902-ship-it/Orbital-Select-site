@@ -87,6 +87,28 @@ const BRANDS_MAP = new Map<string, SpreadsheetBrand>();
 });
 
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// テキスト正規化・欠損値（NaN等）サニタイズヘルパー
+// ─────────────────────────────────────────────
+export function cleanText(val: any): string | undefined {
+  if (val === null || val === undefined) return undefined;
+  const t = String(val).trim();
+  if (!t || /^(nan|null|undefined|不明|未記載|記載なし|-|–)$/i.test(t)) {
+    return undefined;
+  }
+  return t;
+}
+
+// ─────────────────────────────────────────────
+// ブランド別 商品点数集計
+// ─────────────────────────────────────────────
+const BRAND_PRODUCT_COUNTS: Record<string, number> = {};
+(productsJson as SpreadsheetProduct[]).forEach((p) => {
+  const bId = toPartnerBrandId(p.brand_id || 'flymee');
+  BRAND_PRODUCT_COUNTS[bId] = (BRAND_PRODUCT_COUNTS[bId] || 0) + 1;
+});
+
+// ─────────────────────────────────────────────
 // PARTNER_BRANDS_INFO（brands.json から生成）
 // ─────────────────────────────────────────────
 export const PARTNER_BRANDS_INFO: PartnerBrandInfo[] = (brandsJson as SpreadsheetBrand[]).map((b) => {
@@ -100,17 +122,22 @@ export const PARTNER_BRANDS_INFO: PartnerBrandInfo[] = (brandsJson as Spreadshee
     air_rhizome: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
   };
 
+  const productCount = BRAND_PRODUCT_COUNTS[id] || 0;
+  const isComingSoon = productCount === 0;
+
   return {
     id,
     name: b.brand_name,
     jpName: b.brand_name,
-    role: b.style || `${b.brand_name}の上質なインテリア`,
+    role: isComingSoon ? `${b.brand_name}（近日掲載予定）` : (b.style || `${b.brand_name}の上質なインテリア`),
     taste: b.style || 'モダン・ラグジュアリー',
     priceRangeText: '要確認',
     minPrice: 30000,
     maxPrice: 1500000,
     targetAsp: ['A8.net', 'アクセストレード'],
-    description: `${b.brand_name}の正規パートナーストア。上質なデザイン家具・インテリアを提案します。`,
+    description: isComingSoon
+      ? `${b.brand_name}の掲載商品は現在準備中です。近日公開予定です。`
+      : `${b.brand_name}の正規パートナーストア。上質なデザイン家具・インテリアを提案します。`,
     philosophy: `${b.brand_name}が追求するデザインと品質。`,
     features: [`${b.brand_name}正規取扱`, '上質なデザイン', '確かな品質保証'],
     targetUsers: `${b.brand_name}の家具をお探しの方`,
@@ -121,6 +148,8 @@ export const PARTNER_BRANDS_INFO: PartnerBrandInfo[] = (brandsJson as Spreadshee
     heroImage: heroImageMap[b.brand_id] || heroImageMap[b.brand_id.replace('-', '_')] || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
     categories: ['sofa', 'table', 'chair', 'lighting', 'storage', 'desk', 'tv-board', 'bed'],
     isFeaturedPartner: true,
+    productCount,
+    isComingSoon,
   };
 });
 
@@ -194,7 +223,6 @@ export const PRODUCTS: Product[] = (() => {
 
       // 全商品対応：すべての画像URLを抽出
       const images = extractProductImages(sp, FALLBACK_IMAGES[category]);
-      const imageUrl = images[0];
 
       const affiliateUrl = (sp.affiliate_url && sp.affiliate_url.startsWith('http'))
         ? sp.affiliate_url
@@ -202,32 +230,49 @@ export const PRODUCTS: Product[] = (() => {
 
       const cleanId = (sp.product_id || `sp-${idx}`).replace(/[^a-zA-Z0-9_-]/g, '_');
 
-      // スプレッドシート追加列のマッピング
-      const colorsStr = sp.colors ? String(sp.colors).trim() : '';
-      const sizeStr = sp.size ? String(sp.size).trim() : '';
-      const materialsStr = sp.materials ? String(sp.materials).trim() : '';
+      // スプレッドシート追加列のサニタイズ（欠損値・NaN等の完全除外）
+      const colorsClean = cleanText(sp.colors);
+      const sizeClean = cleanText(sp.size);
+      const materialsClean = cleanText(sp.materials);
+      const descClean = cleanText(sp.description);
 
-      const parsedMaterials = materialsStr
-        ? materialsStr
+      const parsedMaterials = materialsClean
+        ? materialsClean
             .split(/[,/、・;]/)
-            .map((m) => m.trim())
-            .filter(Boolean)
+            .map((m) => cleanText(m))
+            .filter((m): m is string => Boolean(m))
         : [];
       const materialsList = parsedMaterials.length > 0 ? parsedMaterials : ['高品質素材'];
 
-      const tags = [brandName, category];
-      if (colorsStr && colorsStr !== '不明' && colorsStr !== '未記載' && colorsStr !== '記載なし' && colorsStr !== '-') {
-        tags.push(colorsStr);
+      const tags: string[] = [brandName];
+      const categoryLabels: Record<string, string> = {
+        sofa: 'ソファ',
+        table: 'テーブル',
+        chair: 'チェア',
+        lighting: '照明',
+        storage: '収納',
+        desk: 'デスク',
+        'tv-board': 'TVボード',
+        bed: 'ベッド',
+      };
+      if (categoryLabels[category]) tags.push(categoryLabels[category]);
+
+      if (colorsClean) {
+        tags.push(colorsClean);
       }
       parsedMaterials.forEach((m) => {
         if (!tags.includes(m)) tags.push(m);
       });
+      // 欠損値（NaN, undefined, 不明等）を完全に除外
+      const cleanTags = tags.filter((t) => Boolean(cleanText(t)));
+
+      const finalDescription = descClean || '詳細は商品ページでご確認ください。';
 
       return {
         id: `gas-${cleanId}`,
         rank: idx + 1,
         name: sp.product_name || '名称不明家具',
-        subtitle: sp.description ? sp.description.slice(0, 50) + '...' : `${brandName}のモダン家具`,
+        subtitle: descClean ? (descClean.length > 48 ? descClean.slice(0, 48) + '...' : descClean) : `${brandName}の厳選家具`,
         brand: brandName,
         partnerBrandId,
         category,
@@ -238,16 +283,16 @@ export const PRODUCTS: Product[] = (() => {
         rating: 4.85,
         reviewCount: 32 + idx * 3,
         images,
-        description: sp.description || `${brandName}のモダンインテリア家具`,
+        description: finalDescription,
         materials: materialsList,
-        materialText: materialsStr || undefined,
-        dimensions: sizeStr || '–',
-        color: colorsStr || '–',
-        colors: colorsStr || undefined,
-        size: sizeStr || undefined,
-        sizeCategory: sizeStr || '標準',
-        tags,
-        editorialComment: `${brandName}のアイコニックなデザインと確かな品質を誇る注目コレクション。`,
+        materialText: materialsClean || undefined,
+        dimensions: sizeClean || 'サイズ詳細は公式サイトでご確認ください',
+        color: colorsClean || 'カラーバリエーションは公式サイトでご確認ください',
+        colors: colorsClean || undefined,
+        size: sizeClean || undefined,
+        sizeCategory: sizeClean || '標準',
+        tags: cleanTags,
+        editorialComment: finalDescription,
         pros: ['正規パートナー取扱品', '上質なデザイン・品質保証'],
         cons: ['最新在庫状況は公式サイトをご確認ください'],
         targetUser: `${brandName}の上質なデザイン家具をお探しの方`,
@@ -260,6 +305,7 @@ export const PRODUCTS: Product[] = (() => {
             isOfficial: true,
           },
         ],
+        affiliateUrl,
         isTopRanked: idx < 5,
         isEditorsPick: idx % 3 === 0,
         isNewArrival: true,
