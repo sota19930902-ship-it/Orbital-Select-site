@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { A8Script } from '../components/A8Script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
     'Orbital Select',
     'オービタルセレクト',
     'MASTERWAL',
-    
-    
     'La Vita',
     '高級家具比較',
     'アフィリエイト',
@@ -26,10 +23,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <script src="//statics.a8.net/a8link/a8linkmgr.js"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              a8linkmgr({
+                "config_id": "xuxzuGXh2ibMRHpHtnyH"
+              });
+            `,
+          }}
+        />
+      </head>
       <body>
-        <A8Script />
         {children}
       </body>
     </html>
   );
 }
+
