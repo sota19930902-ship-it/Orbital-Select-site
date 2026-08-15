@@ -47,16 +47,16 @@ function inferCategory(sp: SpreadsheetProduct): ProductCategory {
   if (cat.includes('sofa') || cat.includes('ソファ') || text.includes('sofa') || text.includes('ソファ')) return 'sofa';
   if (
     cat.includes('light') || cat.includes('照明') ||
-    text.includes('ペンダント') || text.includes('ライト') ||
+    text.includes('ペンダント') || text.includes('ライト') || text.includes('ランプ') ||
     text.includes('panthella') || text.includes('akari') || text.includes('ph 5') ||
     text.includes('ルイスポールセン') || text.includes('照明')
   ) return 'lighting';
-  if (cat.includes('chair') || cat.includes('チェア') || text.includes('chair') || text.includes('チェア') || text.includes('スツール')) return 'chair';
-  if (cat.includes('table') || cat.includes('テーブル') || text.includes('table') || text.includes('テーブル')) return 'table';
-  if (cat.includes('storage') || cat.includes('収納') || text.includes('シェルフ') || text.includes('キャビネット')) return 'storage';
-  if (cat.includes('desk') || cat.includes('デスク') || text.includes('デスク')) return 'desk';
-  if (cat.includes('tv') || text.includes('tvボード') || text.includes('テレビ')) return 'tv-board';
   if (cat.includes('bed') || cat.includes('ベッド') || text.includes('ベッド')) return 'bed';
+  if (cat.includes('tv') || text.includes('tvボード') || text.includes('テレビボード') || text.includes('avボード') || text.includes('テレビ台')) return 'tv-board';
+  if (cat.includes('storage') || cat.includes('収納') || text.includes('シェルフ') || text.includes('キャビネット') || text.includes('チェスト') || text.includes('サイドボード')) return 'storage';
+  if (cat.includes('desk') || cat.includes('デスク') || cat.includes('机') || text.includes('デスク') || text.includes('机')) return 'desk';
+  if (cat.includes('chair') || cat.includes('チェア') || cat.includes('椅子') || text.includes('chair') || text.includes('チェア') || text.includes('スツール') || text.includes('ベンチ')) return 'chair';
+  if (cat.includes('table') || cat.includes('テーブル') || text.includes('table') || text.includes('テーブル')) return 'table';
   return 'sofa';
 }
 

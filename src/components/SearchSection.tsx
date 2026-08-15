@@ -102,11 +102,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
               <select
                 value={filters.category}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  onFilterChange({ category: val });
-                  if (val !== 'all') {
-                    window.location.href = `/categories/${val}`;
-                  }
+                  onFilterChange({ category: e.target.value });
                 }}
                 style={{
                   width: '100%',
