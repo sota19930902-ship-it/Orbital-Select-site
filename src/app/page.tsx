@@ -3,6 +3,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
+import { CategoryQuickBar } from '@/components/CategoryQuickBar';
+import { BestSellersCarousel } from '@/components/BestSellersCarousel';
+import { CategoryShowcase } from '@/components/CategoryShowcase';
+import { RoomNavigation } from '@/components/RoomNavigation';
+import { CategoryView } from '@/components/CategoryView';
 import { SearchSection } from '@/components/SearchSection';
 import { QuickChoiceSection } from '@/components/QuickChoiceSection';
 import { FeaturedBrandsSection } from '@/components/FeaturedBrandsSection';
@@ -27,6 +32,7 @@ import { Search, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState<string>('top');
+  const [selectedCategoryView, setSelectedCategoryView] = useState<string | null>(null);
   const [isSearchResultsExpanded, setIsSearchResultsExpanded] = useState<boolean>(false);
   const [searchCurrentPage, setSearchCurrentPage] = useState<number>(1);
 
@@ -278,6 +284,32 @@ export default function Home() {
     }, 100);
   };
 
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      table: 0,
+      chair: 0,
+      desk: 0,
+      sofa: 0,
+      lighting: 0,
+      storage: 0,
+    };
+    PRODUCTS.forEach((p) => {
+      if (counts[p.category] !== undefined) {
+        counts[p.category]++;
+      }
+    });
+    return counts;
+  }, []);
+
+  const handleSelectRoom = (roomId: string) => {
+    setFilters((prev) => ({ ...prev, room: roomId }));
+    setIsSearchResultsExpanded(true);
+    setTimeout(() => {
+      const el = document.getElementById('search-result-section') || document.getElementById('search-filter-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)', paddingTop: '108px' }}>
 
@@ -292,242 +324,279 @@ export default function Home() {
         onNavClick={handleNavClick}
       />
 
+      {/* PR Disclosure Bar */}
+      <div
+        style={{
+          backgroundColor: 'rgba(212, 175, 55, 0.08)',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+          padding: '10px 16px',
+          fontSize: '0.78rem',
+          color: 'var(--accent-gold)',
+          textAlign: 'center',
+          lineHeight: '1.5',
+        }}
+      >
+        <span>【PR / 広告開示】本サイトは提携各社のアフィリエイト広告プログラムに参加しており、適格販売により紹介料を獲得する場合があります。各商品の最新価格・在庫状況はリンク先の公式ストアにてご確認ください。</span>
+      </div>
+
       {/* Main Content */}
       <main style={{ flex: 1 }}>
-        {/* PR Disclosure Bar */}
-        <div
-          style={{
-            backgroundColor: 'rgba(212, 175, 55, 0.08)',
-            borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-            padding: '10px 16px',
-            fontSize: '0.78rem',
-            color: 'var(--accent-gold)',
-            textAlign: 'center',
-            lineHeight: '1.5',
-          }}
-        >
-          <span>【PR / 広告開示】本サイトは提携各社のアフィリエイト広告プログラムに参加しており、適格販売により紹介料を獲得する場合があります。各商品の最新価格・在庫状況はリンク先の公式ストアにてご確認ください。</span>
-        </div>
+        {selectedCategoryView ? (
+          /* ========================================================
+             1. CATEGORY FULL VIEW (PAGINATED & FILTERABLE)
+             ======================================================== */
+          <CategoryView
+            categoryKey={selectedCategoryView}
+            products={PRODUCTS}
+            onBackToHub={() => {
+              setSelectedCategoryView(null);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onSelectCategory={(catKey) => {
+              setSelectedCategoryView(catKey);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onSelectProduct={(p) => setSelectedProduct(p)}
+            onToggleWishlist={handleToggleWishlist}
+            isInWishlist={isInWishlist}
+            onToggleCompare={handleToggleCompare}
+            isInCompare={isInCompare}
+          />
+        ) : (
+          /* ========================================================
+             2. SHOWCASE HUB (MAIN SHOWCASE WINDOW)
+             ======================================================== */
+          <>
+            {/* ① Hero Section */}
+            <Hero onScrollToRanking={handleScrollToRanking} />
 
-        {/* ① Hero Section */}
-        <Hero onScrollToRanking={handleScrollToRanking} />
-
-        {/* ② Quick Choice Section (かんたん3ステップ入口) */}
-        <QuickChoiceSection
-          onSelectChoice={(updated) => {
-            setFilters((prev) => ({ ...prev, ...updated }));
-            handleExecuteSearch();
-          }}
-        />
-
-        {/* ③ Search Section (10項目詳細検索) */}
-        <SearchSection
-          filters={filters}
-          onFilterChange={(updated) => {
-            setFilters((prev) => ({ ...prev, ...updated }));
-            setIsSearchResultsExpanded(true);
-          }}
-          onResetFilters={() => {
-            setSearchQuery('');
-            setFilters({
-              query: '',
-              category: 'all',
-              brand: 'all',
-              priceRange: 'all',
-              taste: 'all',
-              room: 'all',
-              material: 'all',
-              size: 'all',
-              color: 'all',
-              sortBy: 'popular',
-            });
-          }}
-          onExecuteSearch={handleExecuteSearch}
-          resultCount={filteredProducts.length}
-        />
-
-        {/* NEW Section: Featured Brands (Curated Affiliate Partners) */}
-        <FeaturedBrandsSection />
-
-        {/* ④ Popular Ranking (Featured Orbit) */}
-        <RankingSection
-          products={PRODUCTS}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-          onToggleWishlist={handleToggleWishlist}
-          isInWishlist={isInWishlist}
-        />
-
-        {/* ⑤ Flyby Picks (Editor's Picks) */}
-        <EditorsPicksSection
-          products={PRODUCTS}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-          onToggleWishlist={handleToggleWishlist}
-          isInWishlist={isInWishlist}
-        />
-
-        {/* ⑥ Price Guide */}
-        <PriceTierSection
-          products={PRODUCTS}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-          onToggleWishlist={handleToggleWishlist}
-          isInWishlist={isInWishlist}
-        />
-
-        {/* ⑦ Style Guide */}
-        <TasteSection
-          products={PRODUCTS}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-          onToggleWishlist={handleToggleWishlist}
-          isInWishlist={isInWishlist}
-        />
-
-        {/* Collapsible Filtered Search Results Section */}
-        <section style={{ padding: '60px 0', backgroundColor: '#FFFFFF' }} id="search-result-section">
-          <div className="container">
-            {/* Accordion Toggle Bar */}
-            <div
-              onClick={() => setIsSearchResultsExpanded(!isSearchResultsExpanded)}
-              style={{
-                padding: '24px 32px',
-                backgroundColor: 'var(--bg-sub)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-light)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: 'var(--shadow-subtle)',
+            {/* ② Category Quick Bar (最上部カテゴリナビ) */}
+            <CategoryQuickBar
+              onSelectCategory={(catKey) => {
+                setSelectedCategoryView(catKey);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent-gold)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-light)';
-              }}
-            >
-              <div>
-                <span className="section-tag" style={{ marginBottom: '4px', display: 'inline-block' }}>
-                  Filtered Orbit
-                </span>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: '600', color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  絞り込み検索結果 <span style={{ color: 'var(--accent-gold)', fontSize: '1.2rem', fontWeight: '600' }}>({filteredProducts.length}件)</span>
-                </h2>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-sub)', margin: '6px 0 0' }}>
-                  {isSearchResultsExpanded
-                    ? 'クリックして検索結果一覧をたたむ'
-                    : '指定の条件に一致するブランド家具を一覧表示（クリックで表示）'}
-                </p>
-              </div>
+              categoryCounts={categoryCounts}
+            />
 
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 22px',
-                  borderRadius: 'var(--radius-full)',
-                  backgroundColor: isSearchResultsExpanded ? 'var(--bg-space)' : 'var(--accent-gold)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  fontWeight: '600',
-                  transition: 'all 0.25s ease',
-                }}
-              >
-                {isSearchResultsExpanded ? (
-                  <>検索結果をたたむ <ChevronUp size={18} /></>
-                ) : (
-                  <>検索結果を表示する ({filteredProducts.length}件) <ChevronDown size={18} /></>
-                )}
-              </div>
-            </div>
+            {/* ③ Best Sellers / Pickups Carousel (横スクロールカルーセル) */}
+            <BestSellersCarousel
+              products={PRODUCTS}
+              onSelectProduct={(p) => setSelectedProduct(p)}
+              onToggleWishlist={handleToggleWishlist}
+              isInWishlist={isInWishlist}
+            />
 
-            {/* Collapsible Content Area */}
-            {isSearchResultsExpanded && (
-              <div style={{ marginTop: '36px', animation: 'fadeIn 0.35s ease' }}>
-                {filteredProducts.length === 0 ? (
+            {/* ④ Category Showcase Section (Sofa, Chair, Table, Lighting, Desk 4アイテムダイジェスト) */}
+            <CategoryShowcase
+              products={PRODUCTS}
+              onSelectProduct={(p) => setSelectedProduct(p)}
+              onToggleWishlist={handleToggleWishlist}
+              isInWishlist={isInWishlist}
+              onToggleCompare={handleToggleCompare}
+              isInCompare={isInCompare}
+              onViewCategoryAll={(catKey) => {
+                setSelectedCategoryView(catKey);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+
+            {/* ⑤ Room / Scene Navigation (Living, Dining, Work, Bed 4空間ナビ) */}
+            <RoomNavigation onSelectRoom={handleSelectRoom} />
+
+            {/* ⑥ Curated Partner Brands */}
+            <FeaturedBrandsSection />
+
+            {/* ⑦ Popular Ranking (TOP 10 with Brand Tabs) */}
+            <RankingSection
+              products={PRODUCTS}
+              onSelectProduct={(p) => setSelectedProduct(p)}
+              onToggleWishlist={handleToggleWishlist}
+              isInWishlist={isInWishlist}
+            />
+
+            {/* ⑧ Quick Choice Section (目的・こだわりから選ぶ3ステップ) */}
+            <QuickChoiceSection
+              onSelectChoice={(updated) => {
+                setFilters((prev) => ({ ...prev, ...updated }));
+                handleExecuteSearch();
+              }}
+            />
+
+            {/* ⑨ 10-filter Search Section */}
+            <SearchSection
+              filters={filters}
+              onFilterChange={(updated) => {
+                setFilters((prev) => ({ ...prev, ...updated }));
+                setIsSearchResultsExpanded(true);
+              }}
+              onResetFilters={() => {
+                setSearchQuery('');
+                setFilters({
+                  query: '',
+                  category: 'all',
+                  brand: 'all',
+                  priceRange: 'all',
+                  taste: 'all',
+                  room: 'all',
+                  material: 'all',
+                  size: 'all',
+                  color: 'all',
+                  sortBy: 'popular',
+                });
+              }}
+              onExecuteSearch={handleExecuteSearch}
+              resultCount={filteredProducts.length}
+            />
+
+            {/* Collapsible Filtered Search Results Section */}
+            <section style={{ padding: '60px 0', backgroundColor: '#FFFFFF' }} id="search-result-section">
+              <div className="container">
+                {/* Accordion Toggle Bar */}
+                <div
+                  onClick={() => setIsSearchResultsExpanded(!isSearchResultsExpanded)}
+                  style={{
+                    padding: '24px 32px',
+                    backgroundColor: 'var(--bg-sub)',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-light)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: 'var(--shadow-subtle)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-light)';
+                  }}
+                >
+                  <div>
+                    <span className="section-tag" style={{ marginBottom: '4px', display: 'inline-block' }}>
+                      Filtered Orbit
+                    </span>
+                    <h2 style={{ fontSize: '1.4rem', fontWeight: '600', color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      絞り込み検索結果 <span style={{ color: 'var(--accent-gold)', fontSize: '1.2rem', fontWeight: '600' }}>({filteredProducts.length}件)</span>
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-sub)', margin: '6px 0 0' }}>
+                      {isSearchResultsExpanded
+                        ? 'クリックして検索結果一覧をたたむ'
+                        : '指定の条件に一致するブランド家具を一覧表示（クリックで表示）'}
+                    </p>
+                  </div>
+
                   <div
                     style={{
-                      textAlign: 'center',
-                      padding: '64px 0',
-                      backgroundColor: 'var(--bg-sub)',
-                      borderRadius: 'var(--radius-md)',
-                      border: '1px solid var(--border-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 22px',
+                      borderRadius: 'var(--radius-full)',
+                      backgroundColor: isSearchResultsExpanded ? 'var(--bg-space)' : 'var(--accent-gold)',
+                      color: '#FFFFFF',
+                      fontSize: '0.88rem',
+                      fontWeight: '600',
+                      transition: 'all 0.25s ease',
                     }}
                   >
-                    <Search size={48} color="var(--accent-gold)" style={{ marginBottom: '16px' }} />
-                    <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '8px' }}>
-                      条件に一致する家具が見つかりませんでした
-                    </h3>
-                    <p style={{ color: 'var(--text-sub)', fontSize: '0.9rem', marginBottom: '20px' }}>
-                      検索条件を広げるか、全リセットをお試しください。
-                    </p>
-                    <button
-                      onClick={() => {
-                        setSearchQuery('');
-                        setFilters({
-                          query: '',
-                          category: 'all',
-                          brand: 'all',
-                          priceRange: 'all',
-                          taste: 'all',
-                          room: 'all',
-                          material: 'all',
-                          size: 'all',
-                          color: 'all',
-                          sortBy: 'popular',
-                        });
-                      }}
-                      className="btn-primary"
-                    >
-                      <RefreshCw size={16} /> 条件を全リセットする
-                    </button>
+                    {isSearchResultsExpanded ? (
+                      <>検索結果をたたむ <ChevronUp size={18} /></>
+                    ) : (
+                      <>検索結果を表示する ({filteredProducts.length}件) <ChevronDown size={18} /></>
+                    )}
                   </div>
-                ) : (
-                  <>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                        gap: '28px',
-                      }}
-                    >
-                      {paginatedSearchResults.map((product) => (
-                        <ProductCard
-                          key={product.id}
-                          product={product}
-                          onSelectProduct={(p) => setSelectedProduct(p)}
-                          onToggleWishlist={handleToggleWishlist}
-                          isInWishlist={isInWishlist(product.id)}
-                          onToggleCompare={handleToggleCompare}
-                          isInCompare={isInCompare(product.id)}
-                        />
-                      ))}
-                    </div>
+                </div>
 
-                    <Pagination
-                      currentPage={searchCurrentPage}
-                      totalPages={searchTotalPages}
-                      onPageChange={handleSearchPageChange}
-                    />
-                  </>
+                {/* Collapsible Content Area */}
+                {isSearchResultsExpanded && (
+                  <div style={{ marginTop: '36px', animation: 'fadeIn 0.35s ease' }}>
+                    {filteredProducts.length === 0 ? (
+                      <div
+                        style={{
+                          textAlign: 'center',
+                          padding: '64px 0',
+                          backgroundColor: 'var(--bg-sub)',
+                          borderRadius: 'var(--radius-md)',
+                          border: '1px solid var(--border-light)',
+                        }}
+                      >
+                        <Search size={48} color="var(--accent-gold)" style={{ marginBottom: '16px' }} />
+                        <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '8px' }}>
+                          条件に一致する家具が見つかりませんでした
+                        </h3>
+                        <p style={{ color: 'var(--text-sub)', fontSize: '0.9rem', marginBottom: '20px' }}>
+                          検索条件を広げるか、全リセットをお試しください。
+                        </p>
+                        <button
+                          onClick={() => {
+                            setSearchQuery('');
+                            setFilters({
+                              query: '',
+                              category: 'all',
+                              brand: 'all',
+                              priceRange: 'all',
+                              taste: 'all',
+                              room: 'all',
+                              material: 'all',
+                              size: 'all',
+                              color: 'all',
+                              sortBy: 'popular',
+                            });
+                          }}
+                          className="btn-primary"
+                        >
+                          <RefreshCw size={16} /> 条件を全リセットする
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                            gap: '28px',
+                          }}
+                        >
+                          {paginatedSearchResults.map((product) => (
+                            <ProductCard
+                              key={product.id}
+                              product={product}
+                              onSelectProduct={(p) => setSelectedProduct(p)}
+                              onToggleWishlist={handleToggleWishlist}
+                              isInWishlist={isInWishlist(product.id)}
+                              onToggleCompare={handleToggleCompare}
+                              isInCompare={isInCompare(product.id)}
+                            />
+                          ))}
+                        </div>
+
+                        <Pagination
+                          currentPage={searchCurrentPage}
+                          totalPages={searchTotalPages}
+                          onPageChange={handleSearchPageChange}
+                        />
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        </section>
+            </section>
 
+            {/* ⑩ Editorial Articles (Voyager Journal) */}
+            <ArticlesSection />
 
-        {/* ⑩ Editorial (Voyager Journal) */}
-        <ArticlesSection />
-
-        {/* ⑪ New Arrivals */}
-        <NewArrivalsSection
-          products={PRODUCTS}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-          onToggleWishlist={handleToggleWishlist}
-          isInWishlist={isInWishlist}
-        />
+            {/* ⑪ New Arrivals */}
+            <NewArrivalsSection
+              products={PRODUCTS}
+              onSelectProduct={(p) => setSelectedProduct(p)}
+              onToggleWishlist={handleToggleWishlist}
+              isInWishlist={isInWishlist}
+            />
+          </>
+        )}
       </main>
 
 
