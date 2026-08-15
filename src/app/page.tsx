@@ -9,7 +9,6 @@ import { CategoryShowcase } from '@/components/CategoryShowcase';
 import { RoomNavigation } from '@/components/RoomNavigation';
 import { CategoryView } from '@/components/CategoryView';
 import { SearchSection } from '@/components/SearchSection';
-import { QuickChoiceSection } from '@/components/QuickChoiceSection';
 import { FeaturedBrandsSection } from '@/components/FeaturedBrandsSection';
 import { RankingSection } from '@/components/RankingSection';
 import { EditorsPicksSection } from '@/components/EditorsPicksSection';
@@ -415,15 +414,7 @@ export default function Home() {
               isInWishlist={isInWishlist}
             />
 
-            {/* ⑧ Quick Choice Section (目的・こだわりから選ぶ3ステップ) */}
-            <QuickChoiceSection
-              onSelectChoice={(updated) => {
-                setFilters((prev) => ({ ...prev, ...updated }));
-                handleExecuteSearch();
-              }}
-            />
-
-            {/* ⑨ 10-filter Search Section */}
+            {/* ⑧ 10-filter Search Section */}
             <SearchSection
               filters={filters}
               onFilterChange={(updated) => {
