@@ -20,10 +20,10 @@ interface SituationTab {
 }
 
 const SITUATION_TABS: SituationTab[] = [
-  { id: 'all', label: '👑 総合人気', desc: '全商品から厳選した注目・代表作TOP 6' },
-  { id: 'compact', label: '🛋️ 一人暮らし・省スペース', desc: 'コンパクト家具・スタッキングチェア・省スペース' },
-  { id: 'work', label: '💼 テレワーク・書斎', desc: 'デスク・ワークチェア・デスクランプ・機能美' },
-  { id: 'masterpiece', label: '✨ 一生モノの名作', desc: '時代を超える北欧名作照明・無垢フラッグシップ' },
+  { id: 'all', label: '👑 総合人気', desc: '全商品から厳選した注目・代表作 TOP 10' },
+  { id: 'compact', label: '🛋️ 一人暮らし・省スペース', desc: 'コンパクト家具・スタッキングチェア・省スペース TOP 10' },
+  { id: 'work', label: '💼 テレワーク・書斎', desc: 'デスク・ワークチェア・デスクランプ・機能美 TOP 10' },
+  { id: 'masterpiece', label: '✨ 一生モノの名作', desc: '時代を超える北欧名作照明・無垢フラッグシップ TOP 10' },
   { id: 'lighting', label: '💡 空間を格上げする照明', desc: '光の彫刻・ペンダントライト・ポータブルランプ' },
 ];
 
@@ -36,10 +36,10 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
   const [activeTab, setActiveTab] = useState<SituationTabId>('all');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Filter & sort 6 items per situation tab
+  // Filter & sort up to 10 items per situation tab
   const situationProducts = useMemo(() => {
     if (activeTab === 'lighting') {
-      return products.filter((p) => p.category === 'lighting').slice(0, 6);
+      return products.filter((p) => p.category === 'lighting').slice(0, 10);
     }
 
     if (activeTab === 'work') {
@@ -50,7 +50,7 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
             (p.category === 'chair' && (p.name.includes('CHAIR') || p.tags.includes('チェア'))) ||
             p.room === 'study'
         )
-        .slice(0, 6);
+        .slice(0, 10);
     }
 
     if (activeTab === 'compact') {
@@ -64,7 +64,7 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
             (p.category === 'desk' && p.price < 200000) ||
             (p.category === 'lighting' && p.name.includes('160'))
         )
-        .slice(0, 6);
+        .slice(0, 10);
     }
 
     if (activeTab === 'masterpiece') {
@@ -79,12 +79,13 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
             p.name.includes('YU UC') ||
             p.name.includes('ALMA') ||
             p.name.includes('RITZ') ||
+            p.name.includes('SHADOW') ||
             p.price >= 250000
         )
-        .slice(0, 6);
+        .slice(0, 10);
     }
 
-    // Default 'all' - Balanced Flagship TOP 6
+    // Default 'all' - Balanced Flagship TOP 10
     const brandCounts: Record<string, number> = {};
     const selected: Product[] = [];
     const sorted = [...products].sort((a, b) => {
@@ -96,20 +97,20 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
     for (const p of sorted) {
       const bId = p.partnerBrandId;
       const count = brandCounts[bId] || 0;
-      if (count < 3 && selected.length < 6) {
+      if (count < 4 && selected.length < 10) {
         brandCounts[bId] = count + 1;
         selected.push(p);
       }
     }
 
     for (const p of sorted) {
-      if (selected.length >= 6) break;
+      if (selected.length >= 10) break;
       if (!selected.some((s) => s.id === p.id)) {
         selected.push(p);
       }
     }
 
-    return selected.slice(0, 6);
+    return selected.slice(0, 10);
   }, [products, activeTab]);
 
   const handleScroll = (direction: 'left' | 'right') => {
@@ -191,8 +192,11 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
                 letterSpacing: '-0.01em',
               }}
             >
-              シチュエーション・目的別ランキング
+              シチュエーション・目的別ランキング TOP 10
             </h2>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-sub)', margin: '4px 0 0' }}>
+              目的や間取りに合わせて、満足度・注目の高い名作家具（1位〜10位）をスワイプでチェック
+            </p>
           </div>
 
           {/* Desktop Arrow Scroll Controls */}
@@ -319,7 +323,7 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
         >
           {situationProducts.map((product, idx) => {
             const rank = idx + 1;
-            const rankStr = `#0${rank}`;
+            const rankStr = `#${String(rank).padStart(2, '0')}`;
             const isWish = isInWishlist(product.id);
             const curatorComment = getCuratorComment(product);
             const img = product.images?.[0] || '/images/products/placeholder.jpg';
