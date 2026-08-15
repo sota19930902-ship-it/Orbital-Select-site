@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { Pagination } from './Pagination';
-import { ArrowLeft, SlidersHorizontal, Armchair, LayoutGrid, Monitor, Box, Lightbulb, Sparkles, RefreshCw } from 'lucide-react';
+import { ArrowLeft, SlidersHorizontal, Armchair, LayoutGrid, Monitor, Box, Lightbulb, Sparkles, RefreshCw, Bed } from 'lucide-react';
 import { PARTNER_BRANDS_INFO } from '../data/mockData';
 
 interface CategoryViewProps {
@@ -57,6 +57,12 @@ const CATEGORY_METADATA: Record<
     nameJp: '収納・シェルフ・キャビネット',
     description: '美しく魅せる収納。空間を端正に整えるキャビネット＆シェルフ。',
     icon: Box,
+  },
+  bed: {
+    nameEn: 'BED & BEDDING',
+    nameJp: 'ベッド・寝具',
+    description: '心地よい眠りと上質な寛ぎを届けるベッドフレーム＆マットレス。',
+    icon: Bed,
   },
   lighting: {
     nameEn: 'LIGHTING & LAMPS',
@@ -160,6 +166,8 @@ export const CategoryView: React.FC<CategoryViewProps> = ({
     { id: 'chair', label: 'チェア' },
     { id: 'table', label: 'テーブル' },
     { id: 'desk', label: 'デスク' },
+    { id: 'storage', label: '収納' },
+    { id: 'bed', label: 'ベッド・寝具' },
     { id: 'lighting', label: '照明' },
   ];
 

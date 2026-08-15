@@ -64,8 +64,8 @@ export interface Product {
   brand: string;
   partnerBrandId: PartnerBrandId;
   category: ProductCategory;
-  taste: 'nordic' | 'minimal' | 'hotel' | 'vintage' | 'modern';
-  room: 'living' | 'dining' | 'bedroom' | 'study';
+  taste: 'nordic' | 'minimal' | 'hotel' | 'vintage' | 'modern' | 'natural';
+  room: 'living' | 'dining' | 'bedroom' | 'study' | 'bed';
   price: number;
   priceRangeId: 'under10' | '10to20' | '20to40' | 'over40';
   rating: number;

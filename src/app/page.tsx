@@ -291,6 +291,7 @@ export default function Home() {
       sofa: 0,
       lighting: 0,
       storage: 0,
+      bed: 0,
     };
     PRODUCTS.forEach((p) => {
       if (counts[p.category] !== undefined) {

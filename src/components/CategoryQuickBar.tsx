@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Armchair, LayoutGrid, Monitor, Box, Lightbulb, Compass } from 'lucide-react';
+import { Armchair, LayoutGrid, Monitor, Box, Lightbulb, Compass, Bed } from 'lucide-react';
 
 interface CategoryQuickBarProps {
   onSelectCategory: (category: string) => void;
@@ -13,12 +13,13 @@ export const CategoryQuickBar: React.FC<CategoryQuickBarProps> = ({
   onSelectCategory,
   activeCategory,
   categoryCounts = {
-    table: 75,
-    chair: 31,
-    desk: 24,
-    sofa: 15,
-    lighting: 6,
+    table: 0,
+    chair: 0,
+    desk: 0,
+    sofa: 0,
+    lighting: 0,
     storage: 0,
+    bed: 0,
   },
 }) => {
   const categories = [
@@ -27,28 +28,28 @@ export const CategoryQuickBar: React.FC<CategoryQuickBarProps> = ({
       labelEn: 'SOFA',
       labelJp: 'ソファ',
       icon: Armchair,
-      count: categoryCounts.sofa || 15,
+      count: categoryCounts.sofa || 0,
     },
     {
       id: 'chair',
       labelEn: 'CHAIR',
       labelJp: 'チェア・椅子',
       icon: Armchair,
-      count: categoryCounts.chair || 31,
+      count: categoryCounts.chair || 0,
     },
     {
       id: 'table',
       labelEn: 'TABLE',
       labelJp: 'テーブル',
       icon: LayoutGrid,
-      count: categoryCounts.table || 75,
+      count: categoryCounts.table || 0,
     },
     {
       id: 'desk',
       labelEn: 'DESK',
       labelJp: 'デスク・机',
       icon: Monitor,
-      count: categoryCounts.desk || 24,
+      count: categoryCounts.desk || 0,
     },
     {
       id: 'storage',
@@ -58,11 +59,18 @@ export const CategoryQuickBar: React.FC<CategoryQuickBarProps> = ({
       count: categoryCounts.storage || 0,
     },
     {
+      id: 'bed',
+      labelEn: 'BED',
+      labelJp: 'ベッド・寝具',
+      icon: Bed,
+      count: categoryCounts.bed || 0,
+    },
+    {
       id: 'lighting',
       labelEn: 'LIGHTING',
       labelJp: '照明・ランプ',
       icon: Lightbulb,
-      count: categoryCounts.lighting || 6,
+      count: categoryCounts.lighting || 0,
     },
   ];
 

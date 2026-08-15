@@ -28,7 +28,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
           <span className="section-tag">CUSTOM SEARCH</span>
           <h2 className="section-title">10項目から細かく絞り込む（詳細検索）</h2>
           <p className="section-subtitle">
-            素材・カラー・サイズオーダー・ブランドなど、お好みの詳細条件で151品目を一括横断検索。
+            素材・カラー・サイズオーダー・ブランドなど、お好みの詳細条件で全251品目を一括横断検索。
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
               <div style={{ position: 'relative' }}>
                 <input
                   type="text"
-                  placeholder="例：ウォールナット, デニッシュソファ, MASTERWAL, レザー..."
+                  placeholder="例：ウォールナット, エアリゾーム, デニッシュソファ, MASTERWAL, レザー..."
                   value={filters.query}
                   onChange={(e) => onFilterChange({ query: e.target.value })}
                   style={{
@@ -123,15 +123,15 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                   outline: 'none',
                 }}
               >
-                <option value="all">すべてのカテゴリー (151商品)</option>
-                <option value="table">ダイニングテーブル (75商品)</option>
-                <option value="chair">チェア・椅子 (31商品)</option>
-                <option value="desk">デスク・机 (24商品)</option>
-                <option value="sofa">ソファ (15商品)</option>
-                <option value="lighting">照明 (6商品)</option>
-                <option value="storage">収納・シェルフ</option>
+                <option value="all">すべてのカテゴリー (全251商品)</option>
+                <option value="chair">チェア・椅子 (63商品)</option>
+                <option value="table">テーブル (50商品)</option>
+                <option value="sofa">ソファ (47商品)</option>
+                <option value="desk">デスク・机 (32商品)</option>
+                <option value="storage">収納・シェルフ (27商品)</option>
+                <option value="bed">ベッド・寝具 (18商品)</option>
+                <option value="lighting">照明・ランプ (13商品)</option>
                 <option value="tv-board">TVボード</option>
-                <option value="bed">ベッド</option>
               </select>
             </div>
 

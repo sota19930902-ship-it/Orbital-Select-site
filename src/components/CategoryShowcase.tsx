@@ -3,7 +3,7 @@
 import React from 'react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
-import { ArrowRight, Sparkles, Armchair, LayoutGrid, Lightbulb, Monitor } from 'lucide-react';
+import { ArrowRight, Sparkles, Armchair, LayoutGrid, Lightbulb, Monitor, Box, Bed } from 'lucide-react';
 
 interface CategoryShowcaseProps {
   products: Product[];
@@ -48,6 +48,22 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
       subtitle: '最高峰ウォールナット無垢材とアイアン脚が織りなす上質な食卓',
       icon: LayoutGrid,
       filterFn: (p: Product) => p.category === 'table',
+    },
+    {
+      id: 'storage',
+      nameEn: 'STORAGE & SHELVES',
+      nameJp: '収納・シェルフ',
+      subtitle: '美しく魅せる収納。空間を端正に整えるキャビネット＆シェルフ',
+      icon: Box,
+      filterFn: (p: Product) => p.category === 'storage',
+    },
+    {
+      id: 'bed',
+      nameEn: 'BED & BEDDING',
+      nameJp: 'ベッド・寝具',
+      subtitle: '心地よい眠りと上質な寛ぎを届けるベッドフレーム＆マットレス',
+      icon: Bed,
+      filterFn: (p: Product) => p.category === 'bed',
     },
     {
       id: 'lighting',

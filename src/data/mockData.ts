@@ -51,9 +51,9 @@ function inferCategory(sp: SpreadsheetProduct): ProductCategory {
     text.includes('panthella') || text.includes('akari') || text.includes('ph 5') ||
     text.includes('ルイスポールセン') || text.includes('照明')
   ) return 'lighting';
-  if (cat.includes('bed') || cat.includes('ベッド') || text.includes('ベッド')) return 'bed';
+  if (cat.includes('bed') || cat.includes('ベッド') || cat.includes('寝具') || text.includes('ベッド') || text.includes('寝具') || text.includes('マットレス')) return 'bed';
   if (cat.includes('tv') || text.includes('tvボード') || text.includes('テレビボード') || text.includes('avボード') || text.includes('テレビ台')) return 'tv-board';
-  if (cat.includes('storage') || cat.includes('収納') || text.includes('シェルフ') || text.includes('キャビネット') || text.includes('チェスト') || text.includes('サイドボード')) return 'storage';
+  if (cat.includes('storage') || cat.includes('収納') || text.includes('シェルフ') || text.includes('キャビネット') || text.includes('チェスト') || text.includes('サイドボード') || text.includes('ラック') || text.includes('ハンガー')) return 'storage';
   if (cat.includes('desk') || cat.includes('デスク') || cat.includes('机') || text.includes('デスク') || text.includes('机')) return 'desk';
   if (cat.includes('chair') || cat.includes('チェア') || cat.includes('椅子') || text.includes('chair') || text.includes('チェア') || text.includes('スツール') || text.includes('ベンチ')) return 'chair';
   if (cat.includes('table') || cat.includes('テーブル') || text.includes('table') || text.includes('テーブル')) return 'table';
@@ -276,8 +276,8 @@ export const PRODUCTS: Product[] = (() => {
         brand: brandName,
         partnerBrandId,
         category,
-        taste: category === 'lighting' ? 'nordic' : 'hotel',
-        room: category === 'lighting' ? 'living' : category === 'sofa' ? 'living' : 'dining',
+        taste: category === 'lighting' ? 'nordic' : partnerBrandId === 'air_rhizome' ? 'natural' : 'hotel',
+        room: category === 'bed' ? 'bed' : category === 'desk' ? 'study' : category === 'chair' || category === 'table' ? 'dining' : 'living',
         price,
         priceRangeId,
         rating: 4.85,

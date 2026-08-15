@@ -60,6 +60,7 @@ export const RankingSection: React.FC<RankingSectionProps> = ({
             p.priceRangeId === 'under10' ||
             p.priceRangeId === '10to20' ||
             p.category === 'chair' ||
+            (p.category === 'storage' && p.price < 100000) ||
             (p.category === 'sofa' && p.price < 250000) ||
             (p.category === 'desk' && p.price < 200000) ||
             (p.category === 'lighting' && p.name.includes('160'))
