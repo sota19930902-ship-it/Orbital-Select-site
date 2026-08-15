@@ -107,23 +107,6 @@ export default function SearchPage() {
 
 
       <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '120px 24px 80px' }}>
-        {/* PR Disclosure Banner */}
-        <div
-          style={{
-            backgroundColor: 'rgba(212, 175, 55, 0.08)',
-            border: '1px solid rgba(212, 175, 55, 0.25)',
-            borderRadius: '8px',
-            padding: '10px 16px',
-            fontSize: '0.78rem',
-            color: 'var(--accent-gold-light)',
-            textAlign: 'center',
-            marginBottom: '32px',
-            lineHeight: '1.5',
-          }}
-        >
-          <span>【PR / 広告開示】本サイトは提携各社のアフィリエイト広告プログラムに参加しており、適格販売により紹介料を獲得する場合があります。各商品の最新価格・在庫状況はリンク先の公式ストアにてご確認ください。</span>
-        </div>
-
         {/* Page Title */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div
@@ -146,9 +129,13 @@ export default function SearchPage() {
           <h1 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', color: '#FFFFFF', marginBottom: '12px' }}>
             全提携ブランド・製品横断検索
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem', maxWidth: '640px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem', maxWidth: '640px', margin: '0 auto 12px' }}>
             MASTERWAL、FLYMEe、La Vitaなど、全提携パートナーの151家具アイテムを条件に合わせて一元比較・検索できます。
           </p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+            <span style={{ backgroundColor: 'rgba(197, 164, 109, 0.15)', border: '1px solid rgba(197, 164, 109, 0.4)', padding: '1px 5px', borderRadius: '3px', color: 'var(--accent-gold)', fontWeight: '700', fontSize: '0.64rem' }}>PR</span>
+            <span>提携公式ストアの広告リンクを含みます</span>
+          </div>
         </div>
 
         {/* Global Search Bar */}

@@ -323,21 +323,6 @@ export default function Home() {
         onNavClick={handleNavClick}
       />
 
-      {/* PR Disclosure Bar */}
-      <div
-        style={{
-          backgroundColor: 'rgba(212, 175, 55, 0.08)',
-          borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-          padding: '10px 16px',
-          fontSize: '0.78rem',
-          color: 'var(--accent-gold)',
-          textAlign: 'center',
-          lineHeight: '1.5',
-        }}
-      >
-        <span>【PR / 広告開示】本サイトは提携各社のアフィリエイト広告プログラムに参加しており、適格販売により紹介料を獲得する場合があります。各商品の最新価格・在庫状況はリンク先の公式ストアにてご確認ください。</span>
-      </div>
-
       {/* Main Content */}
       <main style={{ flex: 1 }}>
         {selectedCategoryView ? (
