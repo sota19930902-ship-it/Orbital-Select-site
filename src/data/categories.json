@@ -1,0 +1,58 @@
+[
+  {
+    "category_id": "sofa",
+    "category_name": "ソファ",
+    "category_en": "SOFA",
+    "description": "ローソファ、カウチソファ、オイルレザー、リネンソファ",
+    "display_order": 1
+  },
+  {
+    "category_id": "chair",
+    "category_name": "チェア・椅子",
+    "category_en": "CHAIR",
+    "description": "ダイニングチェア、ラウンジチェア、ワークチェア、スツール",
+    "display_order": 2
+  },
+  {
+    "category_id": "table",
+    "category_name": "テーブル",
+    "category_en": "TABLE",
+    "description": "ウォールナット無垢材、モルタル調天板、アッシュ材ダイニングテーブル",
+    "display_order": 3
+  },
+  {
+    "category_id": "desk",
+    "category_name": "デスク・机",
+    "category_en": "DESK",
+    "description": "1cm単位オーダーデスク、シンプルワークデスク、書斎家具",
+    "display_order": 4
+  },
+  {
+    "category_id": "storage",
+    "category_name": "収納・シェルフ",
+    "category_en": "STORAGE",
+    "description": "サイドボード、シェルフ、キャビネット、オープンラック",
+    "display_order": 5
+  },
+  {
+    "category_id": "lighting",
+    "category_name": "照明・ランプ",
+    "category_en": "LIGHTING",
+    "description": "ルイスポールセン名作、4灯シーリング、間接照明、デスクライト",
+    "display_order": 6
+  },
+  {
+    "category_id": "tv-board",
+    "category_name": "TVボード",
+    "category_en": "TV BOARD",
+    "description": "モルタル調ローボード、ウォールナットAVボード、テレビ台",
+    "display_order": 7
+  },
+  {
+    "category_id": "bed",
+    "category_name": "ベッド・寝具",
+    "category_en": "BED",
+    "description": "フロアローベッド、ウォールナットベッドフレーム、マットレス",
+    "display_order": 8
+  }
+]

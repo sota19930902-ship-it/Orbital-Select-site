@@ -30,9 +30,18 @@ export interface SpreadsheetBrand {
   enabled: string;
 }
 
+export interface SpreadsheetCategory {
+  category_id: string;
+  category_name: string;
+  category_en?: string;
+  description?: string;
+  display_order?: number;
+}
+
 export interface SpreadsheetApiResponse {
   products: SpreadsheetProduct[];
   brands: SpreadsheetBrand[];
+  categories?: SpreadsheetCategory[];
   updated_at: string;
 }
 

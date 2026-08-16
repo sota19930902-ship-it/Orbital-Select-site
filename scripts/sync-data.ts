@@ -20,6 +20,7 @@ async function syncData() {
 
     const productsPath = path.join(dataDir, 'products.json');
     const brandsPath = path.join(dataDir, 'brands.json');
+    const categoriesPath = path.join(dataDir, 'categories.json');
 
     const EXCLUDE_IMAGE_PATTERNS = [
       'catnav', 'kago1_ad', 'coupon', 'rebiewbnr', 'reviewbnr', 'banner', 'bnr',
@@ -43,6 +44,11 @@ async function syncData() {
 
     fs.writeFileSync(productsPath, JSON.stringify(sanitizedProducts, null, 2), 'utf-8');
     fs.writeFileSync(brandsPath, JSON.stringify(data.brands || [], null, 2), 'utf-8');
+
+    if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+      fs.writeFileSync(categoriesPath, JSON.stringify(data.categories, null, 2), 'utf-8');
+      console.log(`[Sync] Successfully saved ${data.categories.length} categories to ${categoriesPath}`);
+    }
 
     console.log(`[Sync] Successfully saved ${data.products?.length || 0} products to ${productsPath}`);
     console.log(`[Sync] Successfully saved ${data.brands?.length || 0} brands to ${brandsPath}`);

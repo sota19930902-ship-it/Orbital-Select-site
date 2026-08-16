@@ -20,6 +20,7 @@ import {
 import { SpreadsheetProduct, SpreadsheetBrand } from '../types/product';
 import productsJson from './products.json';
 import brandsJson from './brands.json';
+import categoriesJson from './categories.json';
 
 // ─────────────────────────────────────────────
 // ブランドID 正規化ヘルパー
@@ -254,17 +255,10 @@ export const PRODUCTS: Product[] = (() => {
       const materialsList = parsedMaterials.length > 0 ? parsedMaterials : ['高品質素材'];
 
       const tags: string[] = [brandName];
-      const categoryLabels: Record<string, string> = {
-        sofa: 'ソファ',
-        table: 'テーブル',
-        chair: 'チェア',
-        lighting: '照明',
-        storage: '収納',
-        desk: 'デスク',
-        'tv-board': 'TVボード',
-        bed: 'ベッド',
-      };
-      if (categoryLabels[category]) tags.push(categoryLabels[category]);
+      const categoryEntry = (categoriesJson as any[]).find((c) => c.category_id === category);
+      if (categoryEntry?.category_name) {
+        tags.push(categoryEntry.category_name);
+      }
 
       if (colorsClean) {
         tags.push(colorsClean);

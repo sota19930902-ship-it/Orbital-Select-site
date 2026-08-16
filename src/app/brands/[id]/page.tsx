@@ -8,6 +8,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { Pagination } from '@/components/Pagination';
 import { PARTNER_BRANDS_INFO, PRODUCTS, VOYAGER_JOURNAL_ARTICLES } from '@/data/mockData';
 import { getAffiliateUrl } from '@/config/affiliate';
+import { getCategoryName } from '@/utils/categoryCounts';
 import { ExternalLink, CheckCircle2, ArrowRight, ShieldCheck, Heart, Sparkles, BookOpen, Layers } from 'lucide-react';
 
 interface PageProps {
@@ -69,17 +70,6 @@ export default function BrandDetailPage({ params }: PageProps) {
   const isInWishlist = (id: string) => wishlist.some((p) => p.id === id);
 
   const affiliateUrl = getAffiliateUrl(brand.id, brand.officialUrl);
-
-  const categoryNames: Record<string, string> = {
-    sofa: 'ソファ (Sofa)',
-    table: 'ダイニングテーブル (Dining Table)',
-    chair: 'チェア (Chair)',
-    storage: '収納家具 (Storage)',
-    lighting: 'インテリア照明 (Lighting)',
-    desk: 'デスク (Desk)',
-    'tv-board': 'TVボード (TV Board)',
-    bed: 'ベッド (Bed)',
-  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-main)' }}>
@@ -332,7 +322,7 @@ export default function BrandDetailPage({ params }: PageProps) {
                   }}
                 >
                   <Layers size={14} color="var(--accent-gold)" />
-                  <span>{categoryNames[cat] || cat}</span>
+                  <span>{getCategoryName(cat)}</span>
                 </Link>
               ))}
             </div>
