@@ -333,6 +333,18 @@ export const PRODUCTS: Product[] = (() => {
 /** ジャーナル記事（スプレッドシート未連携・空配列） */
 export const VOYAGER_JOURNAL_ARTICLES: Article[] = [
   {
+    id: 'light-and-shadow',
+    title: '光を「置く」感覚。陰影がつくる空間の奥行きと素材の表情',
+    subtitle: '天井の照明ひとつに頼る一室一灯から、光と影のグラデーションを楽しむ一室多灯へ。陰影の中でこそ美しく見える素材の選び方とスタイリングのロジック。',
+    category: 'Journal / Interior Styling',
+    readTime: '約4分',
+    date: '2026-08-16',
+    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80',
+    summary: '天井の照明ひとつで部屋全体を煌々と照らす当たり前から、光を「必要な場所に置く」発想へ。光と影のコントラストがなぜ空間に奥行きを与えるのか、そのロジックと陰影の中でこそ美しく見える素材の選び方を解説します。',
+    comparedBrands: ['La Vita', 'Louis Poulsen', 'FLYMEe', 'MASTERWAL'],
+    tags: ['照明', '陰影', 'エディトリアル', 'インテリアスタイリング', 'Louis Poulsen', 'ミニマリズム'],
+  },
+  {
     id: 'lighting-guide',
     title: '【2026年最新】空間の格を上げる「名作北欧・デザイナーズ照明」の選び方とおすすめ5選',
     subtitle: 'ルイスポールセンのPH 5やパンテラ、イサム・ノグチのAKARIなど、灯すだけで部屋を上質なホテルライク空間に変える名作照明の魅力と選び方を徹底解説。',
