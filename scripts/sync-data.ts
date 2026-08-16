@@ -21,7 +21,27 @@ async function syncData() {
     const productsPath = path.join(dataDir, 'products.json');
     const brandsPath = path.join(dataDir, 'brands.json');
 
-    fs.writeFileSync(productsPath, JSON.stringify(data.products || [], null, 2), 'utf-8');
+    const EXCLUDE_IMAGE_PATTERNS = [
+      'catnav', 'kago1_ad', 'coupon', 'rebiewbnr', 'reviewbnr', 'banner', 'bnr',
+      'spacer', 'cal', 'tiktok', 'insta', 'pinta', 'social', 'yahoo', 'google',
+      'doubleclick', 'conbini', 'news', 'price'
+    ];
+
+    const sanitizedProducts = (data.products || []).map((p) => {
+      if (p.image_url && typeof p.image_url === 'string') {
+        const rawUrls = p.image_url.split(/,\s*/);
+        const cleanUrls = rawUrls.filter((u) => {
+          const lower = u.toLowerCase();
+          return !EXCLUDE_IMAGE_PATTERNS.some((pat) => lower.includes(pat));
+        });
+        if (cleanUrls.length > 0) {
+          p.image_url = cleanUrls.slice(0, 4).join(', ');
+        }
+      }
+      return p;
+    });
+
+    fs.writeFileSync(productsPath, JSON.stringify(sanitizedProducts, null, 2), 'utf-8');
     fs.writeFileSync(brandsPath, JSON.stringify(data.brands || [], null, 2), 'utf-8');
 
     console.log(`[Sync] Successfully saved ${data.products?.length || 0} products to ${productsPath}`);

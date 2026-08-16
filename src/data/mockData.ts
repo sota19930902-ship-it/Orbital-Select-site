@@ -167,6 +167,12 @@ export const PARTNER_BRANDS_INFO: PartnerBrandInfo[] = (brandsJson as Spreadshee
 export function extractProductImages(sp: Record<string, any>, fallbackUrl: string): string[] {
   const extracted: string[] = [];
 
+  const EXCLUDE_IMAGE_PATTERNS = [
+    'catnav', 'kago1_ad', 'coupon', 'rebiewbnr', 'reviewbnr', 'banner', 'bnr',
+    'spacer', 'cal', 'tiktok', 'insta', 'pinta', 'social', 'yahoo', 'google',
+    'doubleclick', 'conbini', 'news', 'price'
+  ];
+
   const addUrl = (val: any) => {
     if (!val) return;
     if (typeof val === 'string') {
@@ -175,7 +181,9 @@ export function extractProductImages(sp: Record<string, any>, fallbackUrl: strin
       if (matches) {
         matches.forEach((raw) => {
           const clean = raw.trim().replace(/[),;.]+$/, '');
-          if (clean && !extracted.includes(clean)) {
+          const lower = clean.toLowerCase();
+          const isExcluded = EXCLUDE_IMAGE_PATTERNS.some((pat) => lower.includes(pat));
+          if (clean && !isExcluded && !extracted.includes(clean)) {
             extracted.push(clean);
           }
         });
@@ -199,7 +207,8 @@ export function extractProductImages(sp: Record<string, any>, fallbackUrl: strin
     }
   });
 
-  return extracted.length > 0 ? extracted : [fallbackUrl];
+  const finalImages = extracted.slice(0, 4);
+  return finalImages.length > 0 ? finalImages : [fallbackUrl];
 }
 
 // ─────────────────────────────────────────────
