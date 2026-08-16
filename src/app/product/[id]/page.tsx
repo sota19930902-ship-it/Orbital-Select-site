@@ -9,6 +9,7 @@ import { ProductCard } from '../../../components/ProductCard';
 import { PRODUCTS, VOYAGER_JOURNAL_ARTICLES, PARTNER_BRANDS_INFO } from '../../../data/mockData';
 import { getAffiliateUrl } from '../../../config/affiliate';
 import { Star, ExternalLink, ShieldCheck, CheckCircle2, ArrowRight, Layers, Heart, Scale, ChevronLeft, ChevronRight } from 'lucide-react';
+import { SmartImage } from '../../../components/SmartImage';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -116,14 +117,9 @@ export default function ProductDetailPage({ params }: PageProps) {
                   userSelect: 'none',
                 }}
               >
-                <img
-                  src={currentImage}
+                <SmartImage
+                  srcCandidate={images.slice(activeImageIdx).concat(images.slice(0, activeImageIdx))}
                   alt={`${product.name} - 画像 ${activeImageIdx + 1}`}
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
-                  }}
                   style={{ width: '100%', height: '100%', objectFit: 'contain', transition: 'opacity 0.2s ease' }}
                 />
 
@@ -257,14 +253,9 @@ export default function ProductDetailPage({ params }: PageProps) {
                           if (!isActive) e.currentTarget.style.opacity = '0.65';
                         }}
                       >
-                        <img
+                        <SmartImage
                           src={img}
                           alt=""
-                          referrerPolicy="no-referrer"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
-                          }}
                           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                         />
                       </button>

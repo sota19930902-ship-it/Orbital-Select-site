@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product } from '../types';
 import { getAffiliateUrl } from '../config/affiliate';
 import { Star, ExternalLink, Scale, ChevronRight, Images } from 'lucide-react';
+import { SmartImage } from './SmartImage';
 
 interface ProductCardProps {
   product: Product;
@@ -87,15 +88,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         onClick={handleCardClick}
       >
         <Link href={`/product/${product.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-          <img
-            src={displayImage}
+          <SmartImage
+            srcCandidate={images.length > 0 ? images : displayImage}
             alt={product.name}
-            referrerPolicy="no-referrer"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
-            }}
             style={{
               width: '100%',
               height: '100%',
