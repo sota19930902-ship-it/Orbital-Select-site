@@ -33,7 +33,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
           <span className="section-tag">CUSTOM SEARCH</span>
           <h2 className="section-title">10項目から細かく絞り込む（詳細検索）</h2>
           <p className="section-subtitle">
-            素材・カラー・サイズオーダー・ブランドなど、お好みの詳細条件で全251品目を一括横断検索。
+            素材・カラー・サイズオーダー・ブランドなど、お好みの詳細条件で全{totalProducts}品目を一括横断検索。
           </p>
         </div>
 

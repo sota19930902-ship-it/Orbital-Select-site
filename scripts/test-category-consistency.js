@@ -85,12 +85,12 @@ console.log('[TEST 3] Verifying Component Logic Equivalences:');
 // 3.1 CategoryQuickBar mapping
 const quickBarItems = CATEGORY_IDS.map((id) => ({ id, count: counts[id] || 0 }));
 assert.strictEqual(quickBarItems.reduce((acc, c) => acc + c.count, 0), PRODUCTS.length);
-console.log('  ✓ CategoryQuickBar items total count = 251');
+console.log(`  ✓ CategoryQuickBar items total count = ${PRODUCTS.length}`);
 
 // 3.2 SearchSection dynamic options
 const searchOptions = CATEGORY_IDS.map((id) => ({ id, count: counts[id] || 0 }));
 assert.strictEqual(searchOptions.reduce((acc, c) => acc + c.count, 0), PRODUCTS.length);
-console.log('  ✓ SearchSection dynamic options total count = 251');
+console.log(`  ✓ SearchSection dynamic options total count = ${PRODUCTS.length}`);
 
 // 3.3 CategoryShowcase section items
 const showcaseSections = CATEGORY_IDS.map((id) => ({

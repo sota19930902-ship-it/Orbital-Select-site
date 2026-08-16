@@ -132,7 +132,7 @@ export default function SearchPage() {
             全提携ブランド・製品横断検索
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem', maxWidth: '640px', margin: '0 auto 12px' }}>
-            MASTERWAL、FLYMEe、Air Rhizome、La Vitaなど、全提携パートナーの251家具アイテムを条件に合わせて一元比較・検索できます。
+            MASTERWAL、FLYMEe、Air Rhizome、La Vitaなど、全提携パートナーの{PRODUCTS.length}家具アイテムを条件に合わせて一元比較・検索できます。
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.6)' }}>
             <span style={{ backgroundColor: 'rgba(197, 164, 109, 0.15)', border: '1px solid rgba(197, 164, 109, 0.4)', padding: '1px 5px', borderRadius: '3px', color: 'var(--accent-gold)', fontWeight: '700', fontSize: '0.64rem' }}>PR</span>
