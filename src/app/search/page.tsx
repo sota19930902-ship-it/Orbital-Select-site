@@ -8,10 +8,12 @@ import { CompareDrawer } from '../../components/CompareDrawer';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { ProductModal } from '../../components/ProductModal';
+import { CATEGORY_DEFINITIONS, calculateCategoryCounts } from '../../utils/categoryCounts';
 import { Product, PartnerBrandId, ProductCategory } from '../../types';
 import { Search, Filter, SlidersHorizontal, RefreshCw, Layers, Sparkles } from 'lucide-react';
 
 export default function SearchPage() {
+  const categoryCounts = useMemo(() => calculateCategoryCounts(PRODUCTS), []);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -278,15 +280,15 @@ export default function SearchPage() {
                   outline: 'none',
                 }}
               >
-                <option value="all">すべてのカテゴリ</option>
-                <option value="sofa">ソファ (Sofa)</option>
-                <option value="table">ダイニングテーブル (Table)</option>
-                <option value="chair">チェア・スツール (Chair)</option>
-                <option value="lighting">照明 (Lighting)</option>
-                <option value="storage">収納・シェルフ (Storage)</option>
-                <option value="desk">デスク・机 (Desk)</option>
-                <option value="tv-board">TVボード (TV Board)</option>
-                <option value="bed">ベッド (Bed)</option>
+                <option value="all">すべてのカテゴリ ({PRODUCTS.length}件)</option>
+                {CATEGORY_DEFINITIONS.map((cat) => {
+                  const count = categoryCounts[cat.id] || 0;
+                  return (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.nameJp} ({count}件)
+                    </option>
+                  );
+                })}
               </select>
             </div>
 

@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { SearchFilters } from '../types';
-import { PARTNER_BRANDS_INFO } from '../data/mockData';
+import { SearchFilters, ProductCategory } from '../types';
+import { PARTNER_BRANDS_INFO, PRODUCTS } from '../data/mockData';
+import { CATEGORY_DEFINITIONS, calculateCategoryCounts } from '../utils/categoryCounts';
 import { Search, SlidersHorizontal, RefreshCw } from 'lucide-react';
 
 interface SearchSectionProps {
@@ -11,6 +12,7 @@ interface SearchSectionProps {
   onResetFilters: () => void;
   onExecuteSearch: () => void;
   resultCount: number;
+  categoryCounts?: Partial<Record<ProductCategory, number>>;
 }
 
 export const SearchSection: React.FC<SearchSectionProps> = ({
@@ -19,7 +21,10 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
   onResetFilters,
   onExecuteSearch,
   resultCount,
+  categoryCounts,
 }) => {
+  const counts = categoryCounts || calculateCategoryCounts(PRODUCTS);
+  const totalProducts = PRODUCTS.length;
   return (
     <section style={{ padding: '40px 0 60px', backgroundColor: 'var(--bg-main)' }} id="search-filter-section">
       <div className="container">
@@ -123,15 +128,15 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                   outline: 'none',
                 }}
               >
-                <option value="all">すべてのカテゴリー (全251商品)</option>
-                <option value="chair">チェア・椅子 (63商品)</option>
-                <option value="table">テーブル (50商品)</option>
-                <option value="sofa">ソファ (47商品)</option>
-                <option value="desk">デスク・机 (32商品)</option>
-                <option value="storage">収納・シェルフ (27商品)</option>
-                <option value="bed">ベッド・寝具 (18商品)</option>
-                <option value="lighting">照明・ランプ (13商品)</option>
-                <option value="tv-board">TVボード</option>
+                <option value="all">すべてのカテゴリー (全{totalProducts}商品)</option>
+                {CATEGORY_DEFINITIONS.map((cat) => {
+                  const count = counts[cat.id] || 0;
+                  return (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.nameJp} ({count}商品)
+                    </option>
+                  );
+                })}
               </select>
             </div>
 

@@ -27,6 +27,7 @@ import { Footer } from '@/components/Footer';
 
 import { PRODUCTS } from '@/data/mockData';
 import { Product, SearchFilters } from '@/types';
+import { calculateCategoryCounts } from '@/utils/categoryCounts';
 import { Search, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function Home() {
@@ -284,21 +285,7 @@ export default function Home() {
   };
 
   const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {
-      table: 0,
-      chair: 0,
-      desk: 0,
-      sofa: 0,
-      lighting: 0,
-      storage: 0,
-      bed: 0,
-    };
-    PRODUCTS.forEach((p) => {
-      if (counts[p.category] !== undefined) {
-        counts[p.category]++;
-      }
-    });
-    return counts;
+    return calculateCategoryCounts(PRODUCTS);
   }, []);
 
   const handleSelectRoom = (roomId: string) => {
@@ -424,6 +411,7 @@ export default function Home() {
               }}
               onExecuteSearch={handleExecuteSearch}
               resultCount={filteredProducts.length}
+              categoryCounts={categoryCounts}
             />
 
             {/* Collapsible Filtered Search Results Section */}

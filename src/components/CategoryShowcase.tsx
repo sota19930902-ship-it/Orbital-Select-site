@@ -3,7 +3,8 @@
 import React from 'react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
-import { ArrowRight, Sparkles, Armchair, LayoutGrid, Lightbulb, Monitor, Box, Bed } from 'lucide-react';
+import { CATEGORY_DEFINITIONS } from '../utils/categoryCounts';
+import { ArrowRight } from 'lucide-react';
 
 interface CategoryShowcaseProps {
   products: Product[];
@@ -24,70 +25,11 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
   isInCompare,
   onViewCategoryAll,
 }) => {
-  const showcaseCategories = [
-    {
-      id: 'sofa',
-      nameEn: 'SOFA COLLECTION',
-      nameJp: 'ソファ',
-      subtitle: '空間の主役となる、至高の座り心地とプロポーション',
-      icon: Armchair,
-      filterFn: (p: Product) => p.category === 'sofa',
-    },
-    {
-      id: 'chair',
-      nameEn: 'CHAIR COLLECTION',
-      nameJp: 'チェア・椅子',
-      subtitle: '名作のシルエットと無垢の肌触りが響き合うアイコニックな椅子',
-      icon: Armchair,
-      filterFn: (p: Product) => p.category === 'chair',
-    },
-    {
-      id: 'table',
-      nameEn: 'TABLE COLLECTION',
-      nameJp: 'テーブル',
-      subtitle: '最高峰ウォールナット無垢材とアイアン脚が織りなす上質な食卓',
-      icon: LayoutGrid,
-      filterFn: (p: Product) => p.category === 'table',
-    },
-    {
-      id: 'storage',
-      nameEn: 'STORAGE & SHELVES',
-      nameJp: '収納・シェルフ',
-      subtitle: '美しく魅せる収納。空間を端正に整えるキャビネット＆シェルフ',
-      icon: Box,
-      filterFn: (p: Product) => p.category === 'storage',
-    },
-    {
-      id: 'bed',
-      nameEn: 'BED & BEDDING',
-      nameJp: 'ベッド・寝具',
-      subtitle: '心地よい眠りと上質な寛ぎを届けるベッドフレーム＆マットレス',
-      icon: Bed,
-      filterFn: (p: Product) => p.category === 'bed',
-    },
-    {
-      id: 'lighting',
-      nameEn: 'LIGHTING COLLECTION',
-      nameJp: '照明・ランプ',
-      subtitle: '北欧デザインの巨匠が生んだ、光の彫刻と空間を彩る名作照明',
-      icon: Lightbulb,
-      filterFn: (p: Product) => p.category === 'lighting',
-    },
-    {
-      id: 'desk',
-      nameEn: 'DESK COLLECTION',
-      nameJp: 'デスク・書斎',
-      subtitle: '洗練された機能美と木の温もりで、創造性を高めるワークデスク',
-      icon: Monitor,
-      filterFn: (p: Product) => p.category === 'desk',
-    },
-  ];
-
   return (
     <div style={{ backgroundColor: 'var(--bg-main)' }}>
-      {showcaseCategories.map((catSection, sectionIdx) => {
+      {CATEGORY_DEFINITIONS.map((catSection, sectionIdx) => {
         const Icon = catSection.icon;
-        const allCategoryProducts = products.filter(catSection.filterFn);
+        const allCategoryProducts = products.filter((p) => p.category === catSection.id);
         // Take top 4 diverse representative items
         const top4Products = allCategoryProducts.slice(0, 4);
 

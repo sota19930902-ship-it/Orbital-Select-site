@@ -4,8 +4,9 @@ import React, { useState, useMemo } from 'react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
 import { Pagination } from './Pagination';
-import { ArrowLeft, SlidersHorizontal, Armchair, LayoutGrid, Monitor, Box, Lightbulb, Sparkles, RefreshCw, Bed } from 'lucide-react';
+import { ArrowLeft, SlidersHorizontal, Sparkles, RefreshCw } from 'lucide-react';
 import { PARTNER_BRANDS_INFO } from '../data/mockData';
+import { CATEGORY_DEFINITIONS } from '../utils/categoryCounts';
 
 interface CategoryViewProps {
   categoryKey: string;
@@ -18,59 +19,6 @@ interface CategoryViewProps {
   onToggleCompare?: (product: Product) => void;
   isInCompare?: (productId: string) => boolean;
 }
-
-const CATEGORY_METADATA: Record<
-  string,
-  {
-    nameEn: string;
-    nameJp: string;
-    description: string;
-    icon: React.ElementType;
-  }
-> = {
-  sofa: {
-    nameEn: 'SOFA & LOUNGE',
-    nameJp: 'ソファ・ラウンジチェア',
-    description: '空間の主役となる、至高の座り心地とプロポーションを誇る厳選ソファ。',
-    icon: Armchair,
-  },
-  chair: {
-    nameEn: 'CHAIR & STOOL',
-    nameJp: 'チェア・椅子・スツール',
-    description: '名作のシルエットと無垢の肌触りが響き合うアイコニックな椅子。',
-    icon: Armchair,
-  },
-  table: {
-    nameEn: 'DINING & LOW TABLE',
-    nameJp: 'ダイニングテーブル・ローテーブル',
-    description: '最高峰ウォールナット無垢材とアイアン脚が織りなす上質な食卓。',
-    icon: LayoutGrid,
-  },
-  desk: {
-    nameEn: 'DESK & WORKSPACE',
-    nameJp: 'デスク・ワークスペース',
-    description: '洗練された機能美と木の温もりで、創造性を高めるワークデスク。',
-    icon: Monitor,
-  },
-  storage: {
-    nameEn: 'STORAGE & SHELVES',
-    nameJp: '収納・シェルフ・キャビネット',
-    description: '美しく魅せる収納。空間を端正に整えるキャビネット＆シェルフ。',
-    icon: Box,
-  },
-  bed: {
-    nameEn: 'BED & BEDDING',
-    nameJp: 'ベッド・寝具',
-    description: '心地よい眠りと上質な寛ぎを届けるベッドフレーム＆マットレス。',
-    icon: Bed,
-  },
-  lighting: {
-    nameEn: 'LIGHTING & LAMPS',
-    nameJp: '照明・ペンダント・フロアランプ',
-    description: '北欧デザインの巨匠が生んだ、光の彫刻と空間を彩る名作照明。',
-    icon: Lightbulb,
-  },
-};
 
 const ITEMS_PER_PAGE = 24;
 
@@ -90,12 +38,20 @@ export const CategoryView: React.FC<CategoryViewProps> = ({
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'popular' | 'price-low' | 'price-high' | 'rating'>('popular');
 
-  const meta = CATEGORY_METADATA[categoryKey] || {
-    nameEn: `${categoryKey.toUpperCase()} COLLECTION`,
-    nameJp: `${categoryKey}`,
-    description: '厳選されたインテリア家具コレクション',
-    icon: Sparkles,
-  };
+  const categoryDef = CATEGORY_DEFINITIONS.find((c) => c.id === categoryKey);
+  const meta = categoryDef
+    ? {
+        nameEn: `${categoryDef.nameEn} COLLECTION`,
+        nameJp: categoryDef.nameJp,
+        description: categoryDef.desc,
+        icon: categoryDef.icon,
+      }
+    : {
+        nameEn: `${categoryKey.toUpperCase()} COLLECTION`,
+        nameJp: `${categoryKey}`,
+        description: '厳選されたインテリア家具コレクション',
+        icon: Sparkles,
+      };
   const Icon = meta.icon;
 
   // Filter products by category
@@ -161,15 +117,10 @@ export const CategoryView: React.FC<CategoryViewProps> = ({
     setCurrentPage(1);
   };
 
-  const categoryTabList = [
-    { id: 'sofa', label: 'ソファ' },
-    { id: 'chair', label: 'チェア' },
-    { id: 'table', label: 'テーブル' },
-    { id: 'desk', label: 'デスク' },
-    { id: 'storage', label: '収納' },
-    { id: 'bed', label: 'ベッド・寝具' },
-    { id: 'lighting', label: '照明' },
-  ];
+  const categoryTabList = CATEGORY_DEFINITIONS.map((c) => ({
+    id: c.id,
+    label: c.nameJp,
+  }));
 
   return (
     <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '100px' }}>

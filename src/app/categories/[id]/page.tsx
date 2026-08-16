@@ -8,6 +8,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { ProductModal } from '@/components/ProductModal';
 import { Pagination } from '@/components/Pagination';
 import { PRODUCTS } from '@/data/mockData';
+import { CATEGORY_DEFINITIONS } from '@/utils/categoryCounts';
 import { Product, ProductCategory } from '@/types';
 import { ChevronRight } from 'lucide-react';
 
@@ -19,29 +20,11 @@ export default function CategoryDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const categoryId = resolvedParams.id as ProductCategory;
 
-  const categoryTitles: Record<string, { title: string; en: string; desc: string }> = {
-    sofa: { title: 'ソファ', en: 'Sofa Collection', desc: 'ローソファ、カウチ、オイルレザー、最高級無垢材フレームソファまで徹底比較。' },
-    table: { title: 'ダイニングテーブル', en: 'Dining Table Collection', desc: 'ウォールナット無垢材天板、モルタル調天板、1cm単位サイズオーダーテーブル。' },
-    chair: { title: 'チェア', en: 'Chair Collection', desc: 'ダイニングチェア、デスクチェア、ラウンジチェアの厳選ラインナップ。' },
-    storage: { title: '収納家具', en: 'Storage Collection', desc: '生活感を美しく隠すサイドボード、シェルフ、キャビネット。' },
-    lighting: { title: 'インテリア照明', en: 'Lighting Collection', desc: 'ルイスポールセンPH5等の北欧名作照明から多機能スポットライトまで。' },
-    desk: { title: 'デスク', en: 'Desk Collection', desc: 'ワークスペースの質を高めるカスタマイズデスクとシンプルデスク。' },
-    'tv-board': { title: 'TVボード', en: 'TV Board Collection', desc: 'ロータイプの美しいテレビ台とモルタル調AVボード。' },
-    bed: { title: 'ベッド', en: 'Bed Frame Collection', desc: 'お部屋を広く見せるフロアローベッドと天然木ベッドフレーム。' },
-  };
+  const currentCategoryDef = CATEGORY_DEFINITIONS.find((c) => c.id === categoryId);
+  const info = currentCategoryDef
+    ? { title: currentCategoryDef.nameJp, en: `${currentCategoryDef.nameEn} Collection`, desc: currentCategoryDef.desc }
+    : { title: categoryId, en: categoryId, desc: '厳選プロダクト一覧' };
 
-  const categoryList = [
-    { id: 'sofa', name: 'ソファ' },
-    { id: 'table', name: 'ダイニングテーブル' },
-    { id: 'chair', name: 'チェア' },
-    { id: 'lighting', name: '照明' },
-    { id: 'storage', name: '収納' },
-    { id: 'desk', name: 'デスク' },
-    { id: 'tv-board', name: 'TVボード' },
-    { id: 'bed', name: 'ベッド' },
-  ];
-
-  const info = categoryTitles[categoryId] || { title: categoryId, en: categoryId, desc: '厳選プロダクト一覧' };
   const products = PRODUCTS.filter((p) => p.category === categoryId);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -82,7 +65,7 @@ export default function CategoryDetailPage({ params }: PageProps) {
 
             {/* Category Navigation Pills */}
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '24px' }}>
-              {categoryList.map((cat) => {
+              {CATEGORY_DEFINITIONS.map((cat) => {
                 const isActive = cat.id === categoryId;
                 return (
                   <Link
@@ -100,7 +83,7 @@ export default function CategoryDetailPage({ params }: PageProps) {
                       transition: 'all 0.25s ease',
                     }}
                   >
-                    {cat.name}
+                    {cat.nameJp}
                   </Link>
                 );
               })}

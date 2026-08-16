@@ -1,78 +1,28 @@
 'use client';
 
 import React from 'react';
-import { Armchair, LayoutGrid, Monitor, Box, Lightbulb, Compass, Bed } from 'lucide-react';
+import { Compass } from 'lucide-react';
+import { CATEGORY_DEFINITIONS } from '@/utils/categoryCounts';
+import { ProductCategory } from '@/types';
 
 interface CategoryQuickBarProps {
   onSelectCategory: (category: string) => void;
   activeCategory?: string | null;
-  categoryCounts?: Record<string, number>;
+  categoryCounts?: Partial<Record<ProductCategory, number>>;
 }
 
 export const CategoryQuickBar: React.FC<CategoryQuickBarProps> = ({
   onSelectCategory,
   activeCategory,
-  categoryCounts = {
-    table: 0,
-    chair: 0,
-    desk: 0,
-    sofa: 0,
-    lighting: 0,
-    storage: 0,
-    bed: 0,
-  },
+  categoryCounts = {},
 }) => {
-  const categories = [
-    {
-      id: 'sofa',
-      labelEn: 'SOFA',
-      labelJp: 'ソファ',
-      icon: Armchair,
-      count: categoryCounts.sofa || 0,
-    },
-    {
-      id: 'chair',
-      labelEn: 'CHAIR',
-      labelJp: 'チェア・椅子',
-      icon: Armchair,
-      count: categoryCounts.chair || 0,
-    },
-    {
-      id: 'table',
-      labelEn: 'TABLE',
-      labelJp: 'テーブル',
-      icon: LayoutGrid,
-      count: categoryCounts.table || 0,
-    },
-    {
-      id: 'desk',
-      labelEn: 'DESK',
-      labelJp: 'デスク・机',
-      icon: Monitor,
-      count: categoryCounts.desk || 0,
-    },
-    {
-      id: 'storage',
-      labelEn: 'STORAGE',
-      labelJp: '収納・シェルフ',
-      icon: Box,
-      count: categoryCounts.storage || 0,
-    },
-    {
-      id: 'bed',
-      labelEn: 'BED',
-      labelJp: 'ベッド・寝具',
-      icon: Bed,
-      count: categoryCounts.bed || 0,
-    },
-    {
-      id: 'lighting',
-      labelEn: 'LIGHTING',
-      labelJp: '照明・ランプ',
-      icon: Lightbulb,
-      count: categoryCounts.lighting || 0,
-    },
-  ];
+  const categories = CATEGORY_DEFINITIONS.map((cat) => ({
+    id: cat.id,
+    labelEn: cat.nameEn,
+    labelJp: cat.nameJp,
+    icon: cat.icon,
+    count: categoryCounts[cat.id] || 0,
+  }));
 
   return (
     <section
