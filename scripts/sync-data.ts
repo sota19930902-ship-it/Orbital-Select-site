@@ -25,7 +25,7 @@ async function syncData() {
     const EXCLUDE_IMAGE_PATTERNS = [
       'catnav', 'kago1_ad', 'coupon', 'rebiewbnr', 'reviewbnr', 'banner', 'bnr',
       'spacer', 'cal', 'tiktok', 'insta', 'pinta', 'social', 'yahoo', 'google',
-      'doubleclick', 'conbini', 'news', 'price'
+      'doubleclick', 'conbini', 'news', 'price', 'webclip', 'favicon'
     ];
 
     const sanitizedProducts = (data.products || []).map((p) => {

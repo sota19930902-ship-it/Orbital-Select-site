@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**.shopify.com' },
       { protocol: 'https', hostname: '**.unsplash.com' },
       { protocol: 'https', hostname: '**.actus-interior.com' },
+      { protocol: 'https', hostname: 'www.masterwal.jp', pathname: '/**' },
       { protocol: 'https', hostname: '**.masterwal.jp' },
       { protocol: 'https', hostname: '**.air-r.jp' },
       { protocol: 'https', hostname: '**.flymee.jp' },

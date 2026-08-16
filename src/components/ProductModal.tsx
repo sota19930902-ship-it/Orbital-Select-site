@@ -140,6 +140,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <img
                 src={currentImage}
                 alt={`${product.name} - 画像 ${selectedImgIdx + 1}`}
+                referrerPolicy="no-referrer"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
+                }}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -290,6 +295,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       <img
                         src={img}
                         alt=""
+                        referrerPolicy="no-referrer"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%231a1a24"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23555566" text-anchor="middle" dominant-baseline="middle">NO IMAGE</text></svg>';
+                        }}
                         style={{
                           width: '100%',
                           height: '100%',

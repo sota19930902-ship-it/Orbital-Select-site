@@ -90,6 +90,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={displayImage}
             alt={product.name}
+            referrerPolicy="no-referrer"
             loading="lazy"
             decoding="async"
             onError={(e) => {

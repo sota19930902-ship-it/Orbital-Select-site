@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        <meta name="referrer" content="no-referrer-when-downgrade" />
         <script src="//statics.a8.net/a8link/a8linkmgr.js"></script>
         <script
           dangerouslySetInnerHTML={{
